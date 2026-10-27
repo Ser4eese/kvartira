@@ -79,9 +79,8 @@ ROOMS = [
      "Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. "
      "Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией."),
 ]
-PALETTE = ["olive", "sofa", "sage", "greige", "oak", "tv", "concrete", "graphite", "black"]
 
-PLANS = [("top-plan", "План с мебелью"), ("plan-1", "План с размерами"), ("plan-2", "Розетки"), ("plan-3", "Свет и выключатели"),
+PLANS = [("top-3d", "Вид сверху"), ("top-plan", "План с мебелью"), ("plan-1", "План с размерами"), ("plan-2", "Розетки"), ("plan-3", "Свет и выключатели"),
          ("plan-4", "Вода и канализация"), ("plan-5", "Климат и умный дом")]
 
 HOW = [
@@ -104,23 +103,77 @@ STAGES = [
 ]
 
 
+
+# --- план квартиры (метры; x вправо, y вниз от окон) ---------------------------
+ZONES = {  # id: (прямоугольники зоны, заливка, цвет подписи, центр подписи, площадь)
+    "bed": ([(0, 0, 3.23, 4.45)], "#8E9078", "#fff", (1.62, 2.1), "14,4 м²"),
+    "living": ([(3.43, 0, 6.5, 4.45)], "#A9B39A", "#2f3133", (4.97, 2.1), "26,7 м² с кухней"),
+    "kitchen": ([(3.84, 4.45, 6.5, 6.41)], "#4A4D50", "#fff", (5.2, 5.38), ""),
+    "hall": ([(2.17, 4.45, 3.84, 9.3)], "#E4DED5", "#2f3133", (3.0, 7.1), ""),
+    "bath": ([(4.04, 6.61, 6.5, 9.3)], "#B9BAB8", "#2f3133", (5.27, 7.85), "6,3 м²"),
+}
+ZNAME = {"bed": "Спальня", "living": "Гостиная", "kitchen": "Кухня", "hall": "Прихожая", "bath": "Санузел"}
+WALLS = [((-0.1, -0.1), (6.6, -0.1)), ((-0.1, -0.1), (-0.1, 4.55)), ((-0.1, 4.55), (3.33, 4.55)),
+         ((3.33, -0.1), (3.33, 4.55)), ((2.07, 4.55), (2.07, 9.4)), ((2.07, 9.4), (6.6, 9.4)),
+         ((6.6, -0.1), (6.6, 9.4)), ((3.94, 6.51), (6.6, 6.51)), ((3.94, 6.51), (3.94, 9.4))]
+
+
+def plan_svg(focus=None, full=True):
+    k = 100
+    v = lambda a: f"{a * k:.0f}"
+    out = [f'<svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры">']
+    for zid, (rects, fill, ink, (lx, ly), area) in ZONES.items():
+        on = focus in (None, zid)
+        body = "".join(f'<rect x="{v(x0)}" y="{v(y0)}" width="{v(x1 - x0)}" height="{v(y1 - y0)}"/>' for x0, y0, x1, y1 in rects)
+        g = f'<g class="zone" style="fill:{fill if on else "transparent"}">{body}'
+        if full:
+            rot = f' transform="rotate(-90 {v(lx)} {v(ly)})"' if zid == "hall" else ""
+            g += (f'<text x="{v(lx)}" y="{v(ly)}" fill="{ink}" class="zn"{rot}>{ZNAME[zid]}</text>'
+                  + (f'<text x="{v(lx)}" y="{ly * k + 42:.0f}" fill="{ink}" class="za">{area}</text>' if area else ""))
+        g += "</g>"
+        out.append(f'<a href="#{zid}" aria-label="{ZNAME[zid]}">{g}</a>' if full else g)
+    for (a, b) in WALLS:
+        out.append(f'<line x1="{v(a[0])}" y1="{v(a[1])}" x2="{v(b[0])}" y2="{v(b[1])}" class="wall"/>')
+    # проёмы: окна, двери (закрашиваем стену фоном)
+    for x, w in [(1.43, 1.95), (4.78, 1.95)]:
+        out.append(f'<rect x="{v(x - w / 2)}" y="-20" width="{v(w)}" height="20" class="gap"/>'
+                   f'<line x1="{v(x - w / 2)}" y1="-10" x2="{v(x + w / 2)}" y2="-10" class="glass"/>')
+    out.append('<rect x="223" y="444" width="90" height="22" class="gap"/>'
+               '<path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/>')
+    out.append('<rect x="383" y="691" width="22" height="90" class="gap"/>'
+               '<path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/>')
+    out.append('<rect x="280" y="929" width="96" height="22" class="gap"/>'
+               '<path d="M280,950 L280,1010" class="door"/>')
+    if full:  # размеры
+        for x0, x1, t in [(0, 3.23, "3230"), (3.43, 6.5, "3070")]:
+            out.append(f'<line x1="{v(x0)}" y1="-45" x2="{v(x1)}" y2="-45" class="dim"/>'
+                       f'<text x="{v((x0 + x1) / 2)}" y="-55" class="dt">{t}</text>')
+        out.append('<line x1="-45" y1="0" x2="-45" y2="445" class="dim"/>'
+                   '<text x="-55" y="222" class="dt" transform="rotate(-90 -55 222)">4450</text>')
+        out.append('<line x1="705" y1="0" x2="705" y2="930" class="dim"/>'
+                   '<text x="735" y="465" class="dt" transform="rotate(-90 735 465)">9300</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
 def page():
     def chips(items):
         return "".join(f'<li><span class="chip" style="--c:{SW[k][0]}"></span><b>{SW[k][1]}</b><small>{w}</small></li>'
                        for k, w in items)
+    ids = ["bed", "living", "kitchen", "hall", "bath"]
     rooms = "".join(
-        f'<section class="room"><header><h3>{n}</h3><span class="area">{a}</span></header>'
+        f'<section class="room" id="{rid}"><div class="room-head">{plan_svg(rid, full=False)}'
+        f'<h3>{n}</h3><p class="area">{a}</p></div><div class="room-body">'
         f'<div class="shots n{len(imgs)}">{"".join(f"<img src=img/{i}.jpg alt=\"{n}\" loading=lazy>" for i in imgs)}</div>'
-        f'<div class="room-text"><ul class="swatches">{chips(sw)}</ul><p>{d}</p></div></section>'
-        for n, a, imgs, sw, d in ROOMS)
-    palette = "".join(f'<li style="--c:{SW[k][0]}"><span>{SW[k][1]}</span></li>' for k in PALETTE)
+        f'<p class="desc">{d}</p><ul class="swatches">{chips(sw)}</ul></div></section>'
+        for rid, (n, a, imgs, sw, d) in zip(ids, ROOMS))
     plans = "".join(f'<figure><img src="img/{f}.jpg" alt="{t}" loading="lazy"><figcaption>{t}</figcaption></figure>'
                     for f, t in PLANS)
     how = "".join(f"<div><h3>{t}</h3><p>{d}</p></div>" for t, d in HOW)
     stages = "".join(f"<li><h3>{t}</h3><p>{d}</p></li>" for t, d in STAGES)
     today = datetime.date.today().strftime("%d.%m.%Y")
     out = TEMPLATE
-    for k, v in dict(ROOMS=rooms, PALETTE=palette, PLANS=plans, HOW=how, STAGES=stages, SHOP=shopping(), TODAY=today,
+    for k, v in dict(ROOMS=rooms, PLAN=plan_svg(), PLANS=plans, HOW=how, STAGES=stages, SHOP=shopping(), TODAY=today,
                      VER=str(int(os.path.getmtime(os.path.join(HERE, 'model.js'))))).items():
         out = out.replace(f"%%{k}%%", v)
     return out

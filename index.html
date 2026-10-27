@@ -7,106 +7,120 @@
 <title>Квартира</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500&family=Tenor+Sans&display=swap" rel="stylesheet">
 <style>
-  /* Палитра — реальные отделки квартиры. Фон страницы = цвет стен. */
+  /* Калька, графит и цвета самих комнат. Других акцентов нет. */
   :root {
-    --wall: #ece7e0; --paper: #f6f3ee; --ink: #2f3133; --muted: #5f5e58; --line: #d6cfc4;
-    --olive: #8e9078; --olive-ink: #4f5741; --oak: #c9a57a; --graphite: #4a4d50;
+    --paper: #eef0ea; --ink: #2f3133; --muted: #5d605a; --line: #cfd3c8; --wall: #2f3133; --sheet: #f7f8f4;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--wall); color: var(--ink); font: 17px/1.6 Onest, system-ui, sans-serif; }
-  a { color: var(--olive-ink); text-underline-offset: 3px; }
-  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 3px solid var(--graphite); outline-offset: 3px; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.65 "Golos Text", system-ui, sans-serif; }
+  h1, h2, h3, .area, .zn, .za, .dt, summary, ol.stages li::before { font-family: "Tenor Sans", "Golos Text", sans-serif; font-weight: 400; }
+  a { color: var(--ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
   img { display: block; max-width: 100%; }
-  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 
-  /* Шапка: название + веер образцов */
-  .hero { padding: 64px 0 0; }
-  .hero h1 { font-size: clamp(56px, 12vw, 148px); line-height: .9; font-weight: 700; letter-spacing: -.045em; margin: 0; }
-  .hero p { max-width: 30em; color: var(--muted); margin: 20px 0 40px; font-size: 18px; }
-  .fan { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(9, 1fr); height: 210px; }
-  .fan li { background: var(--c); position: relative; }
-  .fan li span { position: absolute; left: 10px; bottom: 10px; right: 6px; font-size: 13px; font-weight: 500; line-height: 1.25;
-    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
-  .fan li:nth-child(n+3):nth-child(-n+6) span, .fan li:nth-child(7) span { color: var(--ink); text-shadow: none; }
-  .hero .top { width: 100%; cursor: zoom-in; margin-top: 8px; }
+  /* План-чертёж */
+  .plan .wall { stroke: var(--wall); stroke-width: 20; stroke-linecap: square; }
+  .plan .gap { fill: var(--paper); }
+  .plan .glass { stroke: var(--wall); stroke-width: 3; }
+  .plan .door { fill: none; stroke: var(--wall); stroke-width: 3; }
+  .plan .dim { stroke: var(--muted); stroke-width: 1.5; }
+  .plan .dt { font-size: 22px; fill: var(--muted); text-anchor: middle; letter-spacing: .04em; }
+  .plan .zn { font-size: 34px; text-anchor: middle; }
+  .plan .za { font-size: 21px; text-anchor: middle; opacity: .85; }
+  .plan a .zone rect { transition: filter .15s; }
+  .plan a:hover .zone rect, .plan a:focus-visible .zone rect { filter: brightness(1.08) saturate(1.1); }
+  .plan a:focus-visible { outline: none; }
+  .plan a:focus-visible .zone rect { stroke: var(--ink); stroke-width: 6; }
 
-  nav { position: sticky; top: 0; z-index: 5; background: rgba(236,231,224,.95); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
-  nav .wrap { display: flex; gap: 24px; overflow-x: auto; white-space: nowrap; }
-  nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; padding: 13px 0; display: inline-block; }
-  nav a:hover { color: var(--olive-ink); text-decoration: underline; }
+  /* Первый экран: план слева, слово справа */
+  .hero { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: center; padding-top: 48px; padding-bottom: 48px; }
+  .hero .plan { width: 100%; max-height: 88svh; }
+  .hero h1 { font-size: clamp(64px, 9vw, 132px); line-height: .92; letter-spacing: -.02em; margin: 0 0 24px; }
+  .hero p { margin: 0 0 18px; max-width: 26em; }
+  .hero .tap { color: var(--muted); font-size: 15px; }
+  .rooms-index { list-style: none; padding: 0; margin: 28px 0 0; border-top: 1px solid var(--line); }
+  .rooms-index a { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); text-decoration: none; font-size: 19px; }
+  .rooms-index a:hover { padding-left: 6px; transition: padding .15s; }
+  .rooms-index span { color: var(--muted); font-size: 15px; }
 
-  section.block { padding: 80px 0 8px; }
-  h2 { font-size: clamp(34px, 5.5vw, 56px); letter-spacing: -.03em; line-height: 1.05; margin: 0 0 10px; }
+  section.block { padding: 96px 0 8px; }
+  h2 { font-size: clamp(36px, 5vw, 60px); line-height: 1.05; margin: 0 0 10px; letter-spacing: -.01em; }
   .lead { color: var(--muted); max-width: 38em; margin: 0 0 32px; }
-  h3 { font-size: 21px; margin: 0 0 6px; line-height: 1.25; }
+  h3 { font-size: 22px; margin: 0 0 6px; line-height: 1.25; }
 
-  /* Комната: рендеры, образцы отделки, текст */
-  .room { padding: 40px 0 48px; border-top: 1px solid var(--line); }
-  .room header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
-  .room h3 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.02em; margin: 0; }
-  .area { color: var(--muted); }
-  .shots { display: grid; gap: 8px; grid-template-columns: 3fr 2fr; }
+  /* Комната: слева «вы здесь» на плане, справа картинки и отделка */
+  .room { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; padding: 56px 0; border-top: 1px solid var(--line); scroll-margin-top: 20px; }
+  .room-head { position: sticky; top: 24px; align-self: start; }
+  .room-head .plan { width: 150px; display: block; margin-bottom: 18px; }
+  .room-head .plan .zone rect { stroke: var(--line); stroke-width: 2; }
+  .room-head h3 { font-size: clamp(34px, 4vw, 48px); line-height: 1; margin: 0 0 6px; }
+  .area { color: var(--muted); margin: 0; font-size: 17px; }
+  .shots { display: grid; gap: 6px; grid-template-columns: 3fr 2fr; }
   .shots.n1 { grid-template-columns: 1fr; }
   .shots img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
-  .room-text { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px; margin-top: 24px; }
-  .room-text p { margin: 0; max-width: 34em; }
-  .swatches { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; align-content: start; }
-  .swatches li { display: grid; grid-template-columns: 52px 1fr; column-gap: 14px; align-items: center; }
-  .chip { grid-row: span 2; width: 52px; height: 52px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
-  .swatches b { font-weight: 500; line-height: 1.2; }
-  .swatches small { color: var(--muted); font-size: 14px; line-height: 1.3; }
+  .desc { max-width: 36em; margin: 22px 0 26px; }
+  .swatches { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 18px 26px; }
+  .swatches li { display: grid; grid-template-columns: 30px auto; column-gap: 10px; align-items: center; }
+  .chip { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+  .swatches b { font-weight: 500; line-height: 1.2; font-size: 15px; }
+  .swatches small { color: var(--muted); font-size: 13.5px; line-height: 1.3; }
 
-  #model { position: relative; height: min(72vh, 640px); background: var(--paper); overflow: hidden; touch-action: none; }
+  #model { position: relative; height: min(72vh, 640px); background: var(--sheet); border: 1px solid var(--line); overflow: hidden; touch-action: none; }
   .model-tools { position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .model-tools button { font: 500 15px Onest, sans-serif; border: 1px solid var(--line); background: #fff; color: var(--ink);
-    min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer; transition: background-color .15s, color .15s; }
-  .model-tools button[aria-pressed="true"] { background: var(--graphite); border-color: var(--graphite); color: #fff; }
+  .model-tools button { font: 500 15px "Golos Text", sans-serif; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink);
+    min-height: 44px; padding: 0 18px; cursor: pointer; transition: background-color .15s, color .15s; }
+  .model-tools button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); }
   .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
 
-  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 20px; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px 20px; }
   figure { margin: 0; }
-  figure img { cursor: zoom-in; background: #fff; }
-  figcaption { font-weight: 500; margin-top: 8px; }
+  figure img { cursor: zoom-in; background: #fff; border: 1px solid var(--line); }
+  figcaption { margin-top: 8px; }
 
   details { border-top: 1px solid var(--line); }
   details:last-of-type { border-bottom: 1px solid var(--line); }
-  summary { cursor: pointer; padding: 16px 0; font-size: 22px; font-weight: 700; list-style: none; display: flex; align-items: baseline; gap: 10px; }
+  summary { cursor: pointer; padding: 16px 0; font-size: 24px; list-style: none; display: flex; align-items: baseline; gap: 12px; }
   summary::-webkit-details-marker { display: none; }
-  summary::before { content: "+"; width: 20px; color: var(--olive-ink); }
+  summary::before { content: "+"; width: 20px; }
   details[open] summary::before { content: "–"; }
-  .count { font-size: 14px; font-weight: 500; color: var(--muted); }
-  ul.buy { list-style: none; margin: 0 0 20px; padding: 0 0 0 30px; }
+  .count { font-family: "Golos Text", sans-serif; font-size: 14px; color: var(--muted); }
+  ul.buy { list-style: none; margin: 0 0 20px; padding: 0 0 0 32px; }
   ul.buy li { padding: 12px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
   ul.buy .what { font-weight: 500; }
   ul.buy .alt { color: var(--muted); font-size: 15px; }
   ul.buy li.have { opacity: .55; }
 
-  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px 40px; }
-  .how > div { border-top: 3px solid var(--olive); padding-top: 14px; }
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 36px 44px; }
   .how p { margin: 0; }
 
   ol.stages { list-style: none; counter-reset: s; padding: 0; margin: 0; }
-  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 64px 1fr; padding: 20px 0; border-top: 1px solid var(--line); }
-  ol.stages li::before { content: counter(s); grid-row: span 2; font-size: 40px; font-weight: 700; color: var(--olive); line-height: 1; }
+  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 72px 1fr; padding: 22px 0; border-top: 1px solid var(--line); }
+  ol.stages li::before { content: counter(s); grid-row: span 2; font-size: 48px; line-height: 1; }
   ol.stages li h3, ol.stages li p { margin: 0; }
 
-  footer { padding: 64px 0 40px; color: var(--muted); font-size: 14px; }
+  footer { padding: 72px 0 40px; color: var(--muted); font-size: 14px; }
 
   dialog { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
-  dialog::backdrop { background: rgba(38,39,42,.9); }
+  dialog::backdrop { background: rgba(47,49,51,.92); }
   dialog img { max-width: 96vw; max-height: 90vh; }
-  dialog button { position: fixed; top: 14px; right: 14px; font: 500 15px Onest, sans-serif; background: #fff; border: 0;
-    border-radius: 999px; min-height: 44px; padding: 0 18px; cursor: pointer; }
+  dialog button { position: fixed; top: 14px; right: 14px; font: 500 15px "Golos Text", sans-serif; background: var(--sheet); border: 0;
+    min-height: 44px; padding: 0 18px; cursor: pointer; }
 
-  @media (max-width: 760px) {
+  @media (max-width: 860px) {
     body { font-size: 16px; }
-    .fan { grid-template-columns: repeat(3, 1fr); height: auto; }
-    .fan li { height: 84px; }
+    .hero { grid-template-columns: 1fr; min-height: 0; gap: 8px; padding-top: 28px; padding-bottom: 0; }
+    .hero .text { display: contents; }
+    .hero h1 { order: 1; margin-bottom: 8px; } .hero p { order: 2; } .hero .tap { order: 3; }
+    .hero .plan { order: 4; } .rooms-index { order: 5; }
+    .hero .plan { max-height: none; }
+    .room { grid-template-columns: 1fr; gap: 20px; padding: 40px 0; }
+    .room-head { position: static; display: grid; grid-template-columns: 76px 1fr; column-gap: 16px; align-items: center; }
+    .room-head .plan { width: 76px; margin: 0; grid-row: span 2; }
     .shots { grid-template-columns: 1fr; }
-    .room-text { grid-template-columns: 1fr; gap: 24px; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
@@ -118,25 +132,31 @@
 </script>
 </head>
 <body>
-<header class="hero">
-  <div class="wrap">
+<header class="wrap hero">
+  <svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><a href="#bed" aria-label="Спальня"><g class="zone" style="fill:#8E9078"><rect x="0" y="0" width="323" height="445"/><text x="162" y="210" fill="#fff" class="zn">Спальня</text><text x="162" y="252" fill="#fff" class="za">14,4 м²</text></g></a><a href="#living" aria-label="Гостиная"><g class="zone" style="fill:#A9B39A"><rect x="343" y="0" width="307" height="445"/><text x="497" y="210" fill="#2f3133" class="zn">Гостиная</text><text x="497" y="252" fill="#2f3133" class="za">26,7 м² с кухней</text></g></a><a href="#kitchen" aria-label="Кухня"><g class="zone" style="fill:#4A4D50"><rect x="384" y="445" width="266" height="196"/><text x="520" y="538" fill="#fff" class="zn">Кухня</text></g></a><a href="#hall" aria-label="Прихожая"><g class="zone" style="fill:#E4DED5"><rect x="217" y="445" width="167" height="485"/><text x="300" y="710" fill="#2f3133" class="zn" transform="rotate(-90 300 710)">Прихожая</text></g></a><a href="#bath" aria-label="Санузел"><g class="zone" style="fill:#B9BAB8"><rect x="404" y="661" width="246" height="269"/><text x="527" y="785" fill="#2f3133" class="zn">Санузел</text><text x="527" y="827" fill="#2f3133" class="za">6,3 м²</text></g></a><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/><line x1="0" y1="-45" x2="323" y2="-45" class="dim"/><text x="162" y="-55" class="dt">3230</text><line x1="343" y1="-45" x2="650" y2="-45" class="dim"/><text x="496" y="-55" class="dt">3070</text><line x1="-45" y1="0" x2="-45" y2="445" class="dim"/><text x="-55" y="222" class="dt" transform="rotate(-90 -55 222)">4450</text><line x1="705" y1="0" x2="705" y2="930" class="dim"/><text x="735" y="465" class="dt" transform="rotate(-90 735 465)">9300</text></svg>
+  <div class="text">
     <h1>Квартира</h1>
-    <p>46,6 м² в Новосибирске. Как она будет выглядеть, из чего сделана и в каком порядке идёт ремонт. Страница обновляется по ходу дела.</p>
+    <p>46,6 м² в Новосибирске. Как она будет выглядеть, из чего сделана и в каком порядке идёт ремонт.</p>
+    <p class="tap">Нажмите на комнату на плане — откроется её описание.</p>
+    <ul class="rooms-index">
+      <li><a href="#bed">Спальня <span>14,4 м²</span></a></li>
+      <li><a href="#living">Гостиная <span>26,7 м²</span></a></li>
+      <li><a href="#kitchen">Кухня <span>в гостиной</span></a></li>
+      <li><a href="#hall">Прихожая</a></li>
+      <li><a href="#bath">Санузел <span>6,3 м²</span></a></li>
+      <li><a href="#model-block">3D-модель</a></li>
+      <li><a href="#plans">Схемы для мастера</a></li>
+      <li><a href="#shop">Что покупаем</a></li>
+      <li><a href="#stages">Этапы ремонта</a></li>
+    </ul>
   </div>
-  <ul class="fan" aria-label="Цвета и материалы квартиры"><li style="--c:#8E9078"><span>Олива</span></li><li style="--c:#7D8B6A"><span>Зелёный шалфей</span></li><li style="--c:#A9B39A"><span>Шалфей</span></li><li style="--c:#E4DED5"><span>Тёплый грейдж</span></li><li style="--c:#C9A57A"><span>Светлый дуб</span></li><li style="--c:#A6A199"><span>Серо-бежевая</span></li><li style="--c:#B9BAB8"><span>Плитка под бетон</span></li><li style="--c:#4A4D50"><span>Графит</span></li><li style="--c:#26272A"><span>Чёрный металл</span></li></ul>
-  <div class="wrap"><img class="top" src="img/top-3d.jpg" alt="Квартира сверху"></div>
 </header>
-
-<nav aria-label="Разделы"><div class="wrap">
-  <a href="#rooms">Комнаты</a><a href="#model-block">3D</a><a href="#plans">Схемы</a>
-  <a href="#how">Как устроено</a><a href="#shop">Что покупаем</a><a href="#stages">Этапы</a>
-</div></nav>
 
 <main class="wrap">
   <section class="block" id="rooms">
     <h2>Комнаты</h2>
-    <p class="lead">Картинки из программы для дизайна, рядом — образцы отделки каждой комнаты. В жизни цвета будут чуть другими.</p>
-    <section class="room"><header><h3>Спальня</h3><span class="area">14,4 м²</span></header><div class="shots n2"><img src=img/bed-1.jpg alt="Спальня" loading=lazy><img src=img/bed-2.jpg alt="Спальня" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#8E9078"></span><b>Олива</b><small>стена за кроватью</small></li><li><span class="chip" style="--c:#E4DED5"></span><b>Тёплый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>стена под проектор</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, тумбочки</small></li><li><span class="chip" style="--c:#A9B39A"></span><b>Шалфей</b><small>кресло, шторы</small></li></ul><p>Кровать 160 стоит изголовьем к оливковой стене, по бокам тумбочки и бра. У окна — кресло и столик. Шкаф до потолка у двери. Телевизора нет: проектор стоит на тумбочке и показывает на белую стену напротив кровати. Шторы плотные, на электрокарнизе — открываются сами утром.</p></div></section><section class="room"><header><h3>Гостиная</h3><span class="area">26,7 м² вместе с кухней</span></header><div class="shots n2"><img src=img/living-1.jpg alt="Гостиная" loading=lazy><img src=img/living-2.jpg alt="Гостиная" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#A6A199"></span><b>Серо-бежевая</b><small>стена с телевизором</small></li><li><span class="chip" style="--c:#7D8B6A"></span><b>Зелёный шалфей</b><small>диван</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки, тумба</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>светильники, ножки</small></li></ul><p>Диван цвета шалфея, перед ним журнальный стол, который поднимается и становится обеденным. Телевизор на стене, под ним подвесная тумба. У окна рабочее место — кондиционер дует вдоль стены, а не в спину. Кухню от комнаты отделяют деревянные рейки до потолка.</p></div></section><section class="room"><header><h3>Кухня</h3><span class="area"></span></header><div class="shots n1"><img src=img/kitchen.jpg alt="Кухня" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#4A4D50"></span><b>Графит</b><small>фасады, матовые</small></li><li><span class="chip" style="--c:#8F8D88"></span><b>Тёмный камень</b><small>столешница</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>мойка, смеситель</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки</small></li></ul><p>Графитовые фасады до потолка. В высоком шкафу-пенале — духовка, посудомойка и микроволновка. Индукционная плита, вытяжка спрятана в шкаф. Холодильник у реек.</p></div></section><section class="room"><header><h3>Прихожая</h3><span class="area"></span></header><div class="shots n2"><img src=img/hall-1.jpg alt="Прихожая" loading=lazy><img src=img/hall-2.jpg alt="Прихожая" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены и двери в цвет стен</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>шкаф во всю стену</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>рама зеркала</small></li></ul><p>Вдоль стены шкаф до потолка: одежда, отдельная секция для пылесоса и гладильной доски, и полка для роутера. Обувница и большое зеркало. Двери в спальню и санузел скрытые — без наличников, в цвет стены.</p></div></section><section class="room"><header><h3>Санузел</h3><span class="area">6,3 м²</span></header><div class="shots n2"><img src=img/bath-1.jpg alt="Санузел" loading=lazy><img src=img/bath-2.jpg alt="Санузел" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#B9BAB8"></span><b>Плитка под бетон</b><small>стены и пол, плиты 90×180</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>тумба, шкафы</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>смесители, сушитель, профиль душа</small></li></ul><p>Душ без поддона — слив прямо в полу, стеклянная перегородка. Подвесной унитаз, тумба с раковиной. Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией.</p></div></section>
+    <p class="lead">Картинки из программы для дизайна. Кружки под текстом — цвета отделки. В жизни оттенки будут чуть другими.</p>
+    <section class="room" id="bed"><div class="room-head"><svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><g class="zone" style="fill:#8E9078"><rect x="0" y="0" width="323" height="445"/></g><g class="zone" style="fill:transparent"><rect x="343" y="0" width="307" height="445"/></g><g class="zone" style="fill:transparent"><rect x="384" y="445" width="266" height="196"/></g><g class="zone" style="fill:transparent"><rect x="217" y="445" width="167" height="485"/></g><g class="zone" style="fill:transparent"><rect x="404" y="661" width="246" height="269"/></g><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/></svg><h3>Спальня</h3><p class="area">14,4 м²</p></div><div class="room-body"><div class="shots n2"><img src=img/bed-1.jpg alt="Спальня" loading=lazy><img src=img/bed-2.jpg alt="Спальня" loading=lazy></div><p class="desc">Кровать 160 стоит изголовьем к оливковой стене, по бокам тумбочки и бра. У окна — кресло и столик. Шкаф до потолка у двери. Телевизора нет: проектор стоит на тумбочке и показывает на белую стену напротив кровати. Шторы плотные, на электрокарнизе — открываются сами утром.</p><ul class="swatches"><li><span class="chip" style="--c:#8E9078"></span><b>Олива</b><small>стена за кроватью</small></li><li><span class="chip" style="--c:#E4DED5"></span><b>Тёплый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>стена под проектор</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, тумбочки</small></li><li><span class="chip" style="--c:#A9B39A"></span><b>Шалфей</b><small>кресло, шторы</small></li></ul></div></section><section class="room" id="living"><div class="room-head"><svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><g class="zone" style="fill:transparent"><rect x="0" y="0" width="323" height="445"/></g><g class="zone" style="fill:#A9B39A"><rect x="343" y="0" width="307" height="445"/></g><g class="zone" style="fill:transparent"><rect x="384" y="445" width="266" height="196"/></g><g class="zone" style="fill:transparent"><rect x="217" y="445" width="167" height="485"/></g><g class="zone" style="fill:transparent"><rect x="404" y="661" width="246" height="269"/></g><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/></svg><h3>Гостиная</h3><p class="area">26,7 м² вместе с кухней</p></div><div class="room-body"><div class="shots n2"><img src=img/living-1.jpg alt="Гостиная" loading=lazy><img src=img/living-2.jpg alt="Гостиная" loading=lazy></div><p class="desc">Диван цвета шалфея, перед ним журнальный стол, который поднимается и становится обеденным. Телевизор на стене, под ним подвесная тумба. У окна рабочее место — кондиционер дует вдоль стены, а не в спину. Кухню от комнаты отделяют деревянные рейки до потолка.</p><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#A6A199"></span><b>Серо-бежевая</b><small>стена с телевизором</small></li><li><span class="chip" style="--c:#7D8B6A"></span><b>Зелёный шалфей</b><small>диван</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки, тумба</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>светильники, ножки</small></li></ul></div></section><section class="room" id="kitchen"><div class="room-head"><svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><g class="zone" style="fill:transparent"><rect x="0" y="0" width="323" height="445"/></g><g class="zone" style="fill:transparent"><rect x="343" y="0" width="307" height="445"/></g><g class="zone" style="fill:#4A4D50"><rect x="384" y="445" width="266" height="196"/></g><g class="zone" style="fill:transparent"><rect x="217" y="445" width="167" height="485"/></g><g class="zone" style="fill:transparent"><rect x="404" y="661" width="246" height="269"/></g><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/></svg><h3>Кухня</h3><p class="area"></p></div><div class="room-body"><div class="shots n1"><img src=img/kitchen.jpg alt="Кухня" loading=lazy></div><p class="desc">Графитовые фасады до потолка. В высоком шкафу-пенале — духовка, посудомойка и микроволновка. Индукционная плита, вытяжка спрятана в шкаф. Холодильник у реек.</p><ul class="swatches"><li><span class="chip" style="--c:#4A4D50"></span><b>Графит</b><small>фасады, матовые</small></li><li><span class="chip" style="--c:#8F8D88"></span><b>Тёмный камень</b><small>столешница</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>мойка, смеситель</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки</small></li></ul></div></section><section class="room" id="hall"><div class="room-head"><svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><g class="zone" style="fill:transparent"><rect x="0" y="0" width="323" height="445"/></g><g class="zone" style="fill:transparent"><rect x="343" y="0" width="307" height="445"/></g><g class="zone" style="fill:transparent"><rect x="384" y="445" width="266" height="196"/></g><g class="zone" style="fill:#E4DED5"><rect x="217" y="445" width="167" height="485"/></g><g class="zone" style="fill:transparent"><rect x="404" y="661" width="246" height="269"/></g><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/></svg><h3>Прихожая</h3><p class="area"></p></div><div class="room-body"><div class="shots n2"><img src=img/hall-1.jpg alt="Прихожая" loading=lazy><img src=img/hall-2.jpg alt="Прихожая" loading=lazy></div><p class="desc">Вдоль стены шкаф до потолка: одежда, отдельная секция для пылесоса и гладильной доски, и полка для роутера. Обувница и большое зеркало. Двери в спальню и санузел скрытые — без наличников, в цвет стены.</p><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены и двери в цвет стен</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>шкаф во всю стену</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>рама зеркала</small></li></ul></div></section><section class="room" id="bath"><div class="room-head"><svg viewBox="-70 -75 830 1090" class="plan" role="img" aria-label="План квартиры"><g class="zone" style="fill:transparent"><rect x="0" y="0" width="323" height="445"/></g><g class="zone" style="fill:transparent"><rect x="343" y="0" width="307" height="445"/></g><g class="zone" style="fill:transparent"><rect x="384" y="445" width="266" height="196"/></g><g class="zone" style="fill:transparent"><rect x="217" y="445" width="167" height="485"/></g><g class="zone" style="fill:#B9BAB8"><rect x="404" y="661" width="246" height="269"/></g><line x1="-10" y1="-10" x2="660" y2="-10" class="wall"/><line x1="-10" y1="-10" x2="-10" y2="455" class="wall"/><line x1="-10" y1="455" x2="333" y2="455" class="wall"/><line x1="333" y1="-10" x2="333" y2="455" class="wall"/><line x1="207" y1="455" x2="207" y2="940" class="wall"/><line x1="207" y1="940" x2="660" y2="940" class="wall"/><line x1="660" y1="-10" x2="660" y2="940" class="wall"/><line x1="394" y1="651" x2="660" y2="651" class="wall"/><line x1="394" y1="651" x2="394" y2="940" class="wall"/><rect x="45" y="-20" width="195" height="20" class="gap"/><line x1="45" y1="-10" x2="240" y2="-10" class="glass"/><rect x="380" y="-20" width="195" height="20" class="gap"/><line x1="380" y1="-10" x2="576" y2="-10" class="glass"/><rect x="223" y="444" width="90" height="22" class="gap"/><path d="M223,455 L223,545 A90,90 0 0 0 313,455" class="door"/><rect x="383" y="691" width="22" height="90" class="gap"/><path d="M384,781 L294,781 A90,90 0 0 1 384,691" class="door"/><rect x="280" y="929" width="96" height="22" class="gap"/><path d="M280,950 L280,1010" class="door"/></svg><h3>Санузел</h3><p class="area">6,3 м²</p></div><div class="room-body"><div class="shots n2"><img src=img/bath-1.jpg alt="Санузел" loading=lazy><img src=img/bath-2.jpg alt="Санузел" loading=lazy></div><p class="desc">Душ без поддона — слив прямо в полу, стеклянная перегородка. Подвесной унитаз, тумба с раковиной. Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией.</p><ul class="swatches"><li><span class="chip" style="--c:#B9BAB8"></span><b>Плитка под бетон</b><small>стены и пол, плиты 90×180</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>тумба, шкафы</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>смесители, сушитель, профиль душа</small></li></ul></div></section>
   </section>
 
   <section class="block" id="model-block">
@@ -154,7 +174,7 @@
   <section class="block" id="plans">
     <h2>Схемы для мастера</h2>
     <p class="lead">Где розетки, свет, вода и кондиционеры. Нажмите на схему, чтобы открыть крупно.</p>
-    <div class="plans"><figure><img src="img/top-plan.jpg" alt="План с мебелью" loading="lazy"><figcaption>План с мебелью</figcaption></figure><figure><img src="img/plan-1.jpg" alt="План с размерами" loading="lazy"><figcaption>План с размерами</figcaption></figure><figure><img src="img/plan-2.jpg" alt="Розетки" loading="lazy"><figcaption>Розетки</figcaption></figure><figure><img src="img/plan-3.jpg" alt="Свет и выключатели" loading="lazy"><figcaption>Свет и выключатели</figcaption></figure><figure><img src="img/plan-4.jpg" alt="Вода и канализация" loading="lazy"><figcaption>Вода и канализация</figcaption></figure><figure><img src="img/plan-5.jpg" alt="Климат и умный дом" loading="lazy"><figcaption>Климат и умный дом</figcaption></figure></div>
+    <div class="plans"><figure><img src="img/top-3d.jpg" alt="Вид сверху" loading="lazy"><figcaption>Вид сверху</figcaption></figure><figure><img src="img/top-plan.jpg" alt="План с мебелью" loading="lazy"><figcaption>План с мебелью</figcaption></figure><figure><img src="img/plan-1.jpg" alt="План с размерами" loading="lazy"><figcaption>План с размерами</figcaption></figure><figure><img src="img/plan-2.jpg" alt="Розетки" loading="lazy"><figcaption>Розетки</figcaption></figure><figure><img src="img/plan-3.jpg" alt="Свет и выключатели" loading="lazy"><figcaption>Свет и выключатели</figcaption></figure><figure><img src="img/plan-4.jpg" alt="Вода и канализация" loading="lazy"><figcaption>Вода и канализация</figcaption></figure><figure><img src="img/plan-5.jpg" alt="Климат и умный дом" loading="lazy"><figcaption>Климат и умный дом</figcaption></figure></div>
   </section>
 
   <section class="block" id="how">
@@ -190,7 +210,7 @@
 
 <script>
   const dlg = document.getElementById('zoom'), big = dlg.querySelector('img');
-  document.querySelectorAll('.hero .top, .shots img, figure img').forEach(img => {
+  document.querySelectorAll('.shots img, figure img').forEach(img => {
     img.tabIndex = 0;
     const open = () => { big.src = img.src; big.alt = img.alt; dlg.showModal(); };
     img.addEventListener('click', open);
@@ -200,7 +220,7 @@
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 </script>
 <script type="module">
-  import { mount } from './model.js?v=1793068042';
+  import { mount } from './model.js?v=1793068449';
   const api = mount(document.getElementById('model'));
   const toggle = (id, fn) => {
     const b = document.getElementById(id);

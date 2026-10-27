@@ -87,7 +87,7 @@ const FLOORS = [ // x0, y0, x1, y1, цвет
 
 export function mount(el) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeeeae4);
+  scene.background = new THREE.Color(0xf7f8f4);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
