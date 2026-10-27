@@ -95,7 +95,7 @@ export function mount(el) {
   el.appendChild(renderer.domElement);
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  camera.position.set(3.25, 9.5, 4.65 + 6.5);
+  camera.position.set(3.25, 11.5, 4.65 + 8);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(3.25, 0.6, 4.65);
   controls.enableDamping = true;
