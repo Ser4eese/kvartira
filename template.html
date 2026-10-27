@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Наша квартира</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3; --ink: #2b2d2a; --muted: #6d6f68; --olive: #5e6650; --olive-deep: #464d3b;
+    --sage: #a9b39a; --oak: #c9a57a; --line: #dcd8cf; --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 Onest, system-ui, sans-serif; }
+  a { color: var(--olive); }
+  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 3px solid var(--oak); outline-offset: 2px; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  header.hero { background: var(--olive-deep); color: #f1efe8; padding: 56px 0 0; }
+  .hero h1 { font-size: clamp(44px, 9vw, 96px); line-height: .95; font-weight: 700; letter-spacing: -.03em; margin: 0; }
+  .hero p { max-width: 34em; color: #d6d9cc; margin: 18px 0 32px; font-size: 18px; }
+  .hero .top { width: 100%; border-radius: 8px 8px 0 0; cursor: zoom-in; }
+
+  nav { position: sticky; top: 0; z-index: 5; background: rgba(247,246,243,.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; gap: 22px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; white-space: nowrap; }
+  nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; }
+  nav a:hover { color: var(--olive); }
+
+  section.block { padding: 64px 0 8px; }
+  h2 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.02em; line-height: 1.1; margin: 0 0 8px; }
+  .lead { color: var(--muted); max-width: 40em; margin: 0 0 28px; }
+  h3 { font-size: 21px; margin: 0 0 6px; }
+  h3 span { font-weight: 400; color: var(--muted); font-size: 16px; }
+
+  .room { display: grid; grid-template-columns: 1fr 2fr; gap: 28px; padding: 28px 0; border-top: 1px solid var(--line); }
+  .room p { margin: 0; max-width: 32em; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .shots img, figure img { border-radius: 6px; cursor: zoom-in; }
+
+  #model { position: relative; height: min(72vh, 640px); background: #eeeae4; border-radius: 10px; overflow: hidden; touch-action: none; }
+  .model-tools { position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .model-tools button { font: 500 14px Onest, sans-serif; border: 1px solid var(--line); background: #fff; color: var(--ink);
+    padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+  .model-tools button[aria-pressed="true"] { background: var(--olive); border-color: var(--olive); color: #fff; }
+  .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  figure { margin: 0; }
+  figcaption { font-weight: 500; margin-top: 8px; }
+
+  details { border-top: 1px solid var(--line); }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; padding: 16px 0; font-size: 21px; font-weight: 700; list-style: none; display: flex; align-items: baseline; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; width: 18px; color: var(--olive); }
+  details[open] summary::before { content: "–"; }
+  .count { font-size: 14px; font-weight: 500; color: var(--muted); }
+  ul.buy { list-style: none; margin: 0 0 18px; padding: 0 0 0 28px; }
+  ul.buy li { padding: 10px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
+  ul.buy .what { font-weight: 500; }
+  ul.buy .pick { color: var(--ink); }
+  ul.buy .alt { color: var(--muted); font-size: 15px; }
+  ul.buy li.have { opacity: .55; }
+
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px 36px; }
+  .how p { margin: 0; }
+  .how h3 { color: var(--olive-deep); }
+
+  ol.stages { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 0; }
+  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 56px 1fr; padding: 18px 0; border-top: 1px solid var(--line); }
+  ol.stages li::before { content: counter(s); font-size: 34px; font-weight: 700; color: var(--sage); line-height: 1; }
+  ol.stages li h3, ol.stages li p { grid-column: 2; margin: 0; }
+
+  footer { padding: 56px 0 40px; color: var(--muted); font-size: 14px; }
+
+  dialog { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
+  dialog::backdrop { background: rgba(30,32,28,.88); }
+  dialog img { max-width: 96vw; max-height: 90vh; border-radius: 6px; }
+  dialog button { position: fixed; top: 14px; right: 14px; font: 500 15px Onest, sans-serif; background: #fff; border: 0;
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .room { grid-template-columns: 1fr; gap: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Наша<br>квартира</h1>
+    <p>46,6 м² в Новосибирске. Здесь — как она будет выглядеть, что в ней будет и в каком порядке делаем ремонт. Страница обновляется по ходу дела.</p>
+    <img class="top" src="img/top-3d.jpg" alt="Квартира сверху">
+  </div>
+</header>
+
+<nav aria-label="Разделы"><div class="wrap">
+  <a href="#rooms">Комнаты</a><a href="#model-block">3D</a><a href="#plans">Схемы</a>
+  <a href="#how">Как устроено</a><a href="#shop">Что покупаем</a><a href="#stages">Этапы</a>
+</div></nav>
+
+<main class="wrap">
+  <section class="block" id="rooms">
+    <h2>Комнаты</h2>
+    <p class="lead">Картинки из программы для дизайна. Цвета и мебель — как задумано, в жизни будет чуть иначе.</p>
+    %%ROOMS%%
+  </section>
+
+  <section class="block" id="model-block">
+    <h2>Покрутить в 3D</h2>
+    <p class="lead">Стены, окна и двери в реальных размерах. Мебель можно включить — она показана простыми блоками.</p>
+    <div id="model">
+      <div class="model-tools">
+        <button type="button" id="btn-furn" aria-pressed="false">Мебель</button>
+        <button type="button" id="btn-low" aria-pressed="false">Срез стен</button>
+      </div>
+    </div>
+    <p class="hint">Крутить — пальцем или мышью, приблизить — двумя пальцами или колёсиком.</p>
+  </section>
+
+  <section class="block" id="plans">
+    <h2>Схемы для мастера</h2>
+    <p class="lead">Где розетки, свет, вода и кондиционеры. Нажмите на схему, чтобы открыть крупно.</p>
+    <div class="plans">%%PLANS%%</div>
+  </section>
+
+  <section class="block" id="how">
+    <h2>Как будет устроено</h2>
+    <p class="lead">Коротко о том, что в квартире будет работать само.</p>
+    <div class="how">%%HOW%%</div>
+  </section>
+
+  <section class="block" id="shop">
+    <h2>Что покупаем</h2>
+    <p class="lead">Выбрано на Яндекс Маркете — с хорошим рейтингом и большим числом отзывов. Цены на момент выбора, ссылки кликабельные. Бледным — то, что уже есть.</p>
+    %%SHOP%%
+  </section>
+
+  <section class="block" id="stages">
+    <h2>Этапы</h2>
+    <p class="lead">Сначала всё, что потом трудно переделать, мебель — в конце.</p>
+    <ol class="stages">%%STAGES%%</ol>
+  </section>
+</main>
+
+<footer><div class="wrap">Обновлено %%TODAY%%.</div></footer>
+
+<dialog id="zoom"><button type="button" id="zoom-close">Закрыть</button><img alt=""></dialog>
+
+<script>
+  const dlg = document.getElementById('zoom'), big = dlg.querySelector('img');
+  document.querySelectorAll('.hero img, .shots img, figure img').forEach(img => {
+    img.tabIndex = 0;
+    const open = () => { big.src = img.src; big.alt = img.alt; dlg.showModal(); };
+    img.addEventListener('click', open);
+    img.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
+  });
+  document.getElementById('zoom-close').onclick = () => dlg.close();
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+</script>
+<script type="module">
+  import { mount } from './model.js?v=%%VER%%';
+  const api = mount(document.getElementById('model'));
+  const toggle = (id, fn) => {
+    const b = document.getElementById(id);
+    b.onclick = () => { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); fn(on); };
+  };
+  toggle('btn-furn', on => api.setFurniture(on));
+  toggle('btn-low', on => api.setLowWalls(on));
+</script>
+</body>
+</html>

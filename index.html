@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Наша квартира</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3; --ink: #2b2d2a; --muted: #6d6f68; --olive: #5e6650; --olive-deep: #464d3b;
+    --sage: #a9b39a; --oak: #c9a57a; --line: #dcd8cf; --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 Onest, system-ui, sans-serif; }
+  a { color: var(--olive); }
+  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 3px solid var(--oak); outline-offset: 2px; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  header.hero { background: var(--olive-deep); color: #f1efe8; padding: 56px 0 0; }
+  .hero h1 { font-size: clamp(44px, 9vw, 96px); line-height: .95; font-weight: 700; letter-spacing: -.03em; margin: 0; }
+  .hero p { max-width: 34em; color: #d6d9cc; margin: 18px 0 32px; font-size: 18px; }
+  .hero .top { width: 100%; border-radius: 8px 8px 0 0; cursor: zoom-in; }
+
+  nav { position: sticky; top: 0; z-index: 5; background: rgba(247,246,243,.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; gap: 22px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; white-space: nowrap; }
+  nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; }
+  nav a:hover { color: var(--olive); }
+
+  section.block { padding: 64px 0 8px; }
+  h2 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.02em; line-height: 1.1; margin: 0 0 8px; }
+  .lead { color: var(--muted); max-width: 40em; margin: 0 0 28px; }
+  h3 { font-size: 21px; margin: 0 0 6px; }
+  h3 span { font-weight: 400; color: var(--muted); font-size: 16px; }
+
+  .room { display: grid; grid-template-columns: 1fr 2fr; gap: 28px; padding: 28px 0; border-top: 1px solid var(--line); }
+  .room p { margin: 0; max-width: 32em; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  .shots img, figure img { border-radius: 6px; cursor: zoom-in; }
+
+  #model { position: relative; height: min(72vh, 640px); background: #eeeae4; border-radius: 10px; overflow: hidden; touch-action: none; }
+  .model-tools { position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .model-tools button { font: 500 14px Onest, sans-serif; border: 1px solid var(--line); background: #fff; color: var(--ink);
+    padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+  .model-tools button[aria-pressed="true"] { background: var(--olive); border-color: var(--olive); color: #fff; }
+  .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  figure { margin: 0; }
+  figcaption { font-weight: 500; margin-top: 8px; }
+
+  details { border-top: 1px solid var(--line); }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; padding: 16px 0; font-size: 21px; font-weight: 700; list-style: none; display: flex; align-items: baseline; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; width: 18px; color: var(--olive); }
+  details[open] summary::before { content: "–"; }
+  .count { font-size: 14px; font-weight: 500; color: var(--muted); }
+  ul.buy { list-style: none; margin: 0 0 18px; padding: 0 0 0 28px; }
+  ul.buy li { padding: 10px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
+  ul.buy .what { font-weight: 500; }
+  ul.buy .pick { color: var(--ink); }
+  ul.buy .alt { color: var(--muted); font-size: 15px; }
+  ul.buy li.have { opacity: .55; }
+
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px 36px; }
+  .how p { margin: 0; }
+  .how h3 { color: var(--olive-deep); }
+
+  ol.stages { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 0; }
+  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 56px 1fr; padding: 18px 0; border-top: 1px solid var(--line); }
+  ol.stages li::before { content: counter(s); font-size: 34px; font-weight: 700; color: var(--sage); line-height: 1; }
+  ol.stages li h3, ol.stages li p { grid-column: 2; margin: 0; }
+
+  footer { padding: 56px 0 40px; color: var(--muted); font-size: 14px; }
+
+  dialog { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
+  dialog::backdrop { background: rgba(30,32,28,.88); }
+  dialog img { max-width: 96vw; max-height: 90vh; border-radius: 6px; }
+  dialog button { position: fixed; top: 14px; right: 14px; font: 500 15px Onest, sans-serif; background: #fff; border: 0;
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .room { grid-template-columns: 1fr; gap: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Наша<br>квартира</h1>
+    <p>46,6 м² в Новосибирске. Здесь — как она будет выглядеть, что в ней будет и в каком порядке делаем ремонт. Страница обновляется по ходу дела.</p>
+    <img class="top" src="img/top-3d.jpg" alt="Квартира сверху">
+  </div>
+</header>
+
+<nav aria-label="Разделы"><div class="wrap">
+  <a href="#rooms">Комнаты</a><a href="#model-block">3D</a><a href="#plans">Схемы</a>
+  <a href="#how">Как устроено</a><a href="#shop">Что покупаем</a><a href="#stages">Этапы</a>
+</div></nav>
+
+<main class="wrap">
+  <section class="block" id="rooms">
+    <h2>Комнаты</h2>
+    <p class="lead">Картинки из программы для дизайна. Цвета и мебель — как задумано, в жизни будет чуть иначе.</p>
+    <section class="room"><h3>Спальня <span>14,4 м²</span></h3><p>Кровать 160 стоит изголовьем к оливковой стене, по бокам тумбочки и бра. У окна — кресло и столик. Шкаф до потолка у двери. Телевизора нет: проектор стоит на тумбочке и показывает на белую стену напротив кровати. Шторы плотные, на электрокарнизе — открываются сами утром.</p><div class="shots"><img src=img/bed-1.jpg alt="Спальня" loading=lazy><img src=img/bed-2.jpg alt="Спальня" loading=lazy></div></section><section class="room"><h3>Гостиная <span>26,7 м² вместе с кухней</span></h3><p>Диван цвета шалфея, перед ним журнальный стол, который поднимается и становится обеденным. Телевизор на стене, под ним подвесная тумба. У окна рабочее место — кондиционер дует вдоль стены, а не в спину. Кухню от комнаты отделяют деревянные рейки до потолка.</p><div class="shots"><img src=img/living-1.jpg alt="Гостиная" loading=lazy><img src=img/living-2.jpg alt="Гостиная" loading=lazy></div></section><section class="room"><h3>Кухня <span></span></h3><p>Графитовые фасады, тёмная столешница. В высоком шкафу-пенале — духовка, посудомойка и микроволновка. Индукционная плита, вытяжка спрятана в шкаф. Холодильник у реек.</p><div class="shots"><img src=img/kitchen.jpg alt="Кухня" loading=lazy></div></section><section class="room"><h3>Прихожая <span></span></h3><p>Вдоль стены шкаф до потолка: одежда, отдельная секция для пылесоса и гладильной доски, и полка для роутера. Обувница и большое зеркало. Двери в спальню и санузел скрытые — без наличников, в цвет стены.</p><div class="shots"><img src=img/hall-1.jpg alt="Прихожая" loading=lazy><img src=img/hall-2.jpg alt="Прихожая" loading=lazy></div></section><section class="room"><h3>Санузел <span>6,3 м²</span></h3><p>Душ без поддона — слив прямо в полу, стеклянная перегородка. Подвесной унитаз, тумба с раковиной. Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией.</p><div class="shots"><img src=img/bath-1.jpg alt="Санузел" loading=lazy><img src=img/bath-2.jpg alt="Санузел" loading=lazy></div></section>
+  </section>
+
+  <section class="block" id="model-block">
+    <h2>Покрутить в 3D</h2>
+    <p class="lead">Стены, окна и двери в реальных размерах. Мебель можно включить — она показана простыми блоками.</p>
+    <div id="model">
+      <div class="model-tools">
+        <button type="button" id="btn-furn" aria-pressed="false">Мебель</button>
+        <button type="button" id="btn-low" aria-pressed="false">Срез стен</button>
+      </div>
+    </div>
+    <p class="hint">Крутить — пальцем или мышью, приблизить — двумя пальцами или колёсиком.</p>
+  </section>
+
+  <section class="block" id="plans">
+    <h2>Схемы для мастера</h2>
+    <p class="lead">Где розетки, свет, вода и кондиционеры. Нажмите на схему, чтобы открыть крупно.</p>
+    <div class="plans"><figure><img src="img/top-plan.jpg" alt="План с мебелью" loading="lazy"><figcaption>План с мебелью</figcaption></figure><figure><img src="img/plan-1.jpg" alt="План с размерами" loading="lazy"><figcaption>План с размерами</figcaption></figure><figure><img src="img/plan-2.jpg" alt="Розетки" loading="lazy"><figcaption>Розетки</figcaption></figure><figure><img src="img/plan-3.jpg" alt="Свет и выключатели" loading="lazy"><figcaption>Свет и выключатели</figcaption></figure><figure><img src="img/plan-4.jpg" alt="Вода и канализация" loading="lazy"><figcaption>Вода и канализация</figcaption></figure><figure><img src="img/plan-5.jpg" alt="Климат и умный дом" loading="lazy"><figcaption>Климат и умный дом</figcaption></figure></div>
+  </section>
+
+  <section class="block" id="how">
+    <h2>Как будет устроено</h2>
+    <p class="lead">Коротко о том, что в квартире будет работать само.</p>
+    <div class="how"><div><h3>Тёплый пол</h3><p>Электрический мат под плиткой в санузле. Регулятор с Wi-Fi у двери: можно включить с телефона или по расписанию — например, утром на час.</p></div><div><h3>Если протечёт</h3><p>На полу под стиралкой, раковиной, мойкой и у душа лежат датчики. Если намокнет — краны на входе воды закроются сами, на телефон придёт сообщение. Соседей не зальёт.</p></div><div><h3>Свет и шторы</h3><p>Всё слушается Алису. В прихожей и санузле свет включается сам, когда заходишь, а ночью горит тускло. Утром шторы открываются и свет плавно разгорается.</p></div><div><h3>Воздух</h3><p>В каждой комнате кондиционер. В спальне бризер — тихо подаёт уличный воздух через фильтр и подогревает его, окно открывать не нужно. Датчик показывает, когда душно.</p></div><div><h3>Тишина</h3><p>Стены, общие с соседями, закрыты шумоизоляцией, под полом звукопоглощающая подложка.</p></div></div>
+  </section>
+
+  <section class="block" id="shop">
+    <h2>Что покупаем</h2>
+    <p class="lead">Выбрано на Яндекс Маркете — с хорошим рейтингом и большим числом отзывов. Цены на момент выбора, ссылки кликабельные. Бледным — то, что уже есть.</p>
+    <details><summary>Спальня <span class="count">12</span></summary><ul class="buy"><li><span class="what">Кровать 160×200 (габарит ~170×215), с мягким изголовьем</span><span class="pick"><a href="https://market.yandex.ru/card/x/4476177026" target="_blank" rel="noopener">НАСЛАДА, бежевая, на высоких ножках, подъёмник</a> — 24 491 ₽, ★4.9 (683), 2,4K купили, габарит 170×215 — точно в план</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103590473257" target="_blank" rel="noopener">Босс, велюр латте</a> — 27 954 ₽, ★4.7 (761), 172×218</span></li><li><span class="what">Матрас 160×200</span><span class="pick"><a href="https://market.yandex.ru/card/x/103021971699" target="_blank" rel="noopener">Askona Comfort Optima</a> — 11 902 ₽, ★4.8 (10,9K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5783472714" target="_blank" rel="noopener">Devison Spring Orto</a> — 12 047 ₽, ★4.8 (18,1K)</span></li><li><span class="what">Тумбочки 2 шт., ~45×40×47, дуб</span><span class="pick"><a href="https://market.yandex.ru/card/x/103455698337" target="_blank" rel="noopener">массив берёзы, реечный фасад, 40×30×50</a> — 11 201 ₽/шт, ★5.0 (44), 756 купили — рейки как у перегородки</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103190601016" target="_blank" rel="noopener">Hoff SCANDICA Хортен 41×45×40</a> — 3 976 ₽, ★4.9 (55), 304 купили</span></li><li><span class="what">Шкаф 220×60×268, до потолка </span><span class="pick">готовый: <a href="https://market.yandex.ru/card/x/4378911135" target="_blank" rel="noopener">Уютная логика 160×260×50</a> — ★4.7–4.8 (800+ оценок серия) + <a href="https://market.yandex.ru/card/x/4334342781" target="_blank" rel="noopener">Уютная логика 60×260×50 с ящиком</a> — = 220 см · или одним: <a href="https://market.yandex.ru/card/x/4336842886" target="_blank" rel="noopener">225×260×50</a> — если в нишу влезает 225</span></li><li><span class="what">Бра у кровати 2 шт.</span><span class="pick"><a href="https://market.yandex.ru/card/x/4386624162" target="_blank" rel="noopener">Maple Lamp WL-26, чёрный металл + дерево, с выключателем</a> — 2 142 ₽/шт, ★4.8 (55), 328 купили</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102567520853" target="_blank" rel="noopener">Marseille LED, USB</a> — 1 498 ₽, ★4.7 (2,7K)</span></li><li><span class="what">Кресло у окна, ~68×84×76, букле/дуб</span><span class="pick"><a href="https://market.yandex.ru/card/x/103761686210" target="_blank" rel="noopener">Teddy, букле шалфей, деревянный каркас</a> — 5 504 ₽, ★4.8 (63) — компактное 56×55</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5097384054" target="_blank" rel="noopener">PLAYWOODS Hush Relax, букле</a> — 21 250 ₽, ★4.7 (13), крупнее</span></li><li><span class="what">Столик кофейный круглый Ø45, h 42</span><span class="pick"><a href="https://market.yandex.ru/card/x/103571751110" target="_blank" rel="noopener">EDWOOD S02, массив, светлый дуб, 40×40×50</a> — 3 818 ₽, ★4.8 (291), 644 купили</span></li><li><span class="what">Ковёр круглый/овальный ~140</span><span class="pick"><a href="https://market.yandex.ru/card/x/4741981665" target="_blank" rel="noopener">Bilbao BL26 Ø160, кремовый, рельефный</a> — 5 893 ₽, ★4.9 (1K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103141347749" target="_blank" rel="noopener">джутовый Ø150</a> — 10 166 ₽, ★4.9 (412)</span></li><li><span class="what">Шторы блэкаут, ширина ~260, h 265</span><span class="pick"><a href="https://market.yandex.ru/card/x/5843069046" target="_blank" rel="noopener">Guten Morgen «Рогожка» бежевый шале, 2×200×270</a> — 3 813 ₽, ★4.8 (линейка 800+ оценок); подшить до 265</span></li><li><span class="what">Электрокарниз 2,6 м</span><span class="pick"><a href="https://market.yandex.ru/card/x/102560905004" target="_blank" rel="noopener">RAYOS, Wi-Fi, регулируемая длина</a> — ~8 000 ₽, ★4.8 (108) — проверить работу с Алисой</span></li><li><span class="what">Проектор настольный (на тумбочку, картинка на белую стену)</span><span class="pick"><a href="https://market.yandex.ru/card/x/227383667008761856" target="_blank" rel="noopener">JIN TU X4, Real Full HD, 300 ANSI, Android</a> — 11 153 ₽, ★4.8 (1,4K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102941191974" target="_blank" rel="noopener">SHAKACHU C50, Full HD, автофокус</a> — 23 634 ₽, ★4.9 (119). Нужна автокоррекция трапеции — стоит сбоку</span></li><li><span class="what">Кондиционер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5146442615" target="_blank" rel="noopener">iFFALCON IF-CLTB09INV, инвертор, Wi-Fi</a> — 18 429 ₽, ★4.9 (943)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103752085019" target="_blank" rel="noopener">TCL TAC-CT09INV/R</a> — 27 998 ₽, ★4.8 (1,4K); мульти-сплит — уточнить у монтажника</span></li></ul></details>
+<details><summary>Зал <span class="count">18</span></summary><ul class="buy"><li><span class="what">Диван 225×98, шалфей/олива</span><span class="pick"><a href="https://market.yandex.ru/card/x/101486331733" target="_blank" rel="noopener">FORREST Сканди 220×97×92, тик-так, деревянные ножки</a> — 43 099 ₽, ★4.9 (42), магазин ★4.7; есть цвета зелёный/бежевый</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/6236603272" target="_blank" rel="noopener">Финка, минимализм, зелёный</a> — 27 376 ₽, ★4.7 (648)</span></li><li><span class="what">Журнальный стол-трансформер (подъёмная столешница), ~100×55</span><span class="pick"><a href="https://market.yandex.ru/card/x/4346769755" target="_blank" rel="noopener">AMI Лофт, трансформер 60×60 → 120×80, подъём</a> — 9 164 ₽, ★4.7 (1K), 3,2K купили; выбрать цвет под дуб</span></li><li><span class="what">Стулья для гостей 2 шт., складные</span><span class="pick"><a href="https://market.yandex.ru/card/x/103756044128" target="_blank" rel="noopener">ФанераФан, складной, дерево без покраски</a> — 1 946 ₽/шт, ★4.8 (93), 763 купили</span></li><li class="have"><span class="what"><s>Рабочий стол 160×75×75</s></span><span class="pick">есть свой</span></li><li class="have"><span class="what"><s>Офисное кресло</s></span><span class="pick">пока не нужно</span></li><li><span class="what">Навесной шкаф над столом 85×35×75 (рядом с кондиционером) </span><span class="pick"><a href="https://market.yandex.ru/card/x/103818843627" target="_blank" rel="noopener">навесной горизонтальный 80 см, Frenesie Лофт ВГ800</a> — 4 506 ₽, ★5.0 (43) — выбрать белый</span></li><li><span class="what">Телевизор 55&quot;</span><span class="pick"><a href="https://market.yandex.ru/card/x/103828516240" target="_blank" rel="noopener">TCL 55&quot; Q6CS QD-Mini LED, Google TV</a> — 48 081 ₽, ★4.8 (3,6K)</span></li><li><span class="what">ТВ-тумба подвесная 160×40×45, дуб/ротанг</span><span class="pick"><a href="https://market.yandex.ru/card/x/103189786086" target="_blank" rel="noopener">POINT 30, дуб вотан, 160×40×30</a> — 8 837 ₽, ★4.8 (96), 300 купили</span></li><li><span class="what">Навесной шкаф над ТВ 160×35×55 </span><span class="pick">2 × <a href="https://market.yandex.ru/card/x/103818843627" target="_blank" rel="noopener">Frenesie ВГ800, 80 см</a> — ≈9 000 ₽ за пару</span></li><li><span class="what">Шкаф 120×40×до потолка у окна, правая стена</span><span class="pick">готовый: <a href="https://market.yandex.ru/card/x/103802681070" target="_blank" rel="noopener">Уютная логика 120×260×50</a> — 18 543 ₽, ★4.7 (805) — глубина 50 вместо 40</span></li><li><span class="what">Рейки-перегородка дуб, 120×270</span><span class="pick">не продаётся готовой нигде нормально. Делаем сами: 15 шт. <a href="https://leroymerlin.ru/product/brusok-stroganyy-40h40x3000-mm-hvoya-sort-optima-81947394/" target="_blank" rel="noopener">брусок строганый 40×40×3000, Леруа</a> (лучше сорт «Экстра», без сучков, ~400–740 ₽/шт) + масло с тоном «дуб» + крепёж к полу и закладной в потолке; шаг 40 мм. МДФ-рейки 16×40 для отдельностоящей перегородки слишком хлипкие</span></li><li><span class="what">Ковёр 200×160</span><span class="pick"><a href="https://market.yandex.ru/card/x/103189319465" target="_blank" rel="noopener">безворсовый 160×230, Фабрика Белка, серо-бежевый</a> — 4 967 ₽, ★4.8 (847), 2,1K купили</span></li><li><span class="what">Торшер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5554185388" target="_blank" rel="noopener">Rivoli Anda, абажур из джута, дерево, полки, 148 см</a> — 4 684 ₽, ★4.8 (2,4K), 11K купили</span></li><li><span class="what">Шторы, ширина ~230, h 265</span><span class="pick"><a href="https://market.yandex.ru/card/x/5843069046" target="_blank" rel="noopener">те же Guten Morgen «Рогожка»</a> — 3 813 ₽</span></li><li><span class="what">Электрокарниз 2,3 м</span><span class="pick"><a href="https://market.yandex.ru/card/x/102560905003" target="_blank" rel="noopener">RAYOS, Wi-Fi, регулируемая длина</a> — ~7 200 ₽, ★4.8 (108)</span></li><li><span class="what">Кондиционер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5146442615" target="_blank" rel="noopener">iFFALCON IF-CLTB09INV, инвертор, Wi-Fi</a> — 18 429 ₽, ★4.9 (943)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103752085019" target="_blank" rel="noopener">TCL TAC-CT09INV/R</a> — 27 998 ₽, ★4.8 (1,4K); мульти-сплит — уточнить у монтажника</span></li><li><span class="what">Картина/постер ~80×100</span><span class="pick">ссылка:</span></li><li><span class="what">Растение в кашпо</span><span class="pick">ссылка:</span></li></ul></details>
+<details><summary>Кухня <span class="count">10</span></summary><ul class="buy"><li><span class="what">Кухонный гарнитур графит матовый : нижние 45 + 100 (под варку) + угол 60 + 60 (мойка); пенал 60 под технику; навесные 145 + 60 + 60, над холодильником 60×70</span><span class="pick">ссылка:</span></li><li><span class="what">Холодильник 60×62×195, двухкамерный</span><span class="pick"><a href="https://market.yandex.ru/card/x/5227998029" target="_blank" rel="noopener">Comfee RCB449WH1R, Full No Frost, 353 л</a> — 29 489 ₽, ★4.8 (6,3K) — сверить высоту с нишей под шкаф 60×70</span></li><li><span class="what">Духовой шкаф встраиваемый 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/103800129117" target="_blank" rel="noopener">Weissgauff EOM 306 Black Edition, конвекция, гриль</a> — 21 590 ₽, ★4.8 (2,4K)</span></li><li><span class="what">Посудомойка компактная встраиваемая 60×45 (h)</span><span class="pick">компактных встраиваемых 60×45 с хорошими оценками нет → вариант: узкая 45 см под столешницу на место ящика 45: <a href="https://market.yandex.ru/card/x/5930185310" target="_blank" rel="noopener">Comfee CDWI450, 9 компл.</a> — 18 990 ₽, ★4.8 (3,2K)</span></li><li class="have"><span class="what"><s>Микроволновка встраиваемая 60×38–45</s></span><span class="pick">есть своя — если она отдельностоящая, в пенале нужна ниша-полка 60 с зазорами для вентиляции</span></li><li><span class="what">Варочная панель индукционная 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/102770140399" target="_blank" rel="noopener">Comfee CIH601, индукция, инвертор</a> — 8 488 ₽, ★4.8 (3K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102205603857" target="_blank" rel="noopener">Weissgauff HI 640 BA</a> — 12 428 ₽, ★4.8 (577)</span></li><li><span class="what">Вытяжка встраиваемая в шкаф 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/102168371176" target="_blank" rel="noopener">Hansa OTP6651BGH, телескопическая</a> — 7 676 ₽, ★4.8 (428)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5145316892" target="_blank" rel="noopener">DeLonghi KT-ARIA 606 NB</a> — 5 063 ₽, ★4.9 (262)</span></li><li><span class="what">Мойка 55 (чёрная)</span><span class="pick"><a href="https://market.yandex.ru/card/x/4675544426" target="_blank" rel="noopener">Domaci Болонья 50×50, искусственный камень, чёрная</a> — 4 163 ₽, ★4.9 (208)</span></li><li><span class="what">Смеситель</span><span class="pick"><a href="https://market.yandex.ru/card/x/103566349578" target="_blank" rel="noopener">Pragma Melpul, матовый чёрный, выдвижной излив</a> — 6 918 ₽, ★4.8 (222)</span></li><li><span class="what">LED-подсветка под шкафы ~1,8 м + профиль</span><span class="pick"><a href="https://market.yandex.ru/card/x/4414293241" target="_blank" rel="noopener">лента LTC COB 24 В, 4000K, 5 м</a> — 1 783 ₽, ★4.9 (143) + профиль и блок питания 24 В</span></li></ul></details>
+<details><summary>Прихожая <span class="count">6</span></summary><ul class="buy"><li><span class="what">Шкаф 240×60×268 : одежда 130 + хозсекция 60 + секция 50 под роутер</span><span class="pick">готовый: <a href="https://market.yandex.ru/card/x/4335454449" target="_blank" rel="noopener">Уютная логика 180×260×50 с ящиками (одежда)</a> —  + <a href="https://market.yandex.ru/card/x/4334342781" target="_blank" rel="noopener">60×260×50 (хозсекция: пылесос, гладильная доска)</a> — = 240 см; роутер — на верхнюю полку 60-го модуля, розетку перенести туда</span></li><li><span class="what">Обувница 80×35×50</span><span class="pick"><a href="https://market.yandex.ru/card/x/103761368243" target="_blank" rel="noopener">«Урана» графит, 88×28×85, 4 542 ₽</a> (выше плана — проверить место)</span></li><li><span class="what">Зеркало 60×180</span><span class="pick"><a href="https://market.yandex.ru/card/x/103191275865" target="_blank" rel="noopener">TODA ALMA 180×60, чёрная рама, 7 619 ₽</a></span></li><li><span class="what">Роутер</span><span class="pick"><a href="https://market.yandex.ru/card/x/103195114473" target="_blank" rel="noopener">TP-Link Archer AX55, Wi-Fi 6</a> — 6 197 ₽, ★4.9 (544) — либо роутер провайдера</span></li><li><span class="what">Ручной моющий пылесос</span><span class="pick"><a href="https://market.yandex.ru/card/x/5746915290" target="_blank" rel="noopener">Roborock F25 LT Gen2</a> — 25 990 ₽, ★4.9 (2K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102155874538" target="_blank" rel="noopener">Midea VSS1200</a> — 12 498 ₽, ★4.7 (14,6K)</span></li><li><span class="what">Встроенная выдвижная гладильная доска в ящик 60 (Ironfix и аналоги)</span><span class="pick"><a href="https://market.yandex.ru/card/x/4671802584" target="_blank" rel="noopener">встраиваемая выдвижная доска</a> — 8 285 ₽, ★4.7 (32) — оценок мало, Hettich Ironfix надёжнее (через мебельщика)</span></li></ul></details>
+<details><summary>Санузел <span class="count">16</span></summary><ul class="buy"><li><span class="what">Душевое ограждение 160×90, стекло</span><span class="pick"><a href="https://market.yandex.ru/card/x/102038741223" target="_blank" rel="noopener">перегородка walk-in 900×2000, чёрный профиль, стекло 8 мм</a> — 11 231 ₽, ★4.7 (295)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103032753138" target="_blank" rel="noopener">Ulitka Walk In Premier 90×195</a> — 16 256 ₽, ★4.9 (140)</span></li><li><span class="what">Трап/лоток для душа или поддон</span><span class="pick"><a href="https://market.yandex.ru/card/x/103170630926" target="_blank" rel="noopener">AM.PM PrimeFlow 70 см, сухой затвор</a> — 6 165 ₽, ★4.7 (464)</span></li><li><span class="what">Душевая система (лейка + термостат)</span><span class="pick"><a href="https://market.yandex.ru/card/x/5859356163" target="_blank" rel="noopener">ESKO Line, термостат, чёрная</a> — 21 631 ₽, ★4.7 (169)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/4540059845" target="_blank" rel="noopener">нерж. сталь, чёрная, тропический душ</a> — 17 251 ₽, ★4.8 (275) — без термостата?</span></li><li><span class="what">Тумба с раковиной 80 + зеркальный шкаф (на заказ или готовая)</span><span class="pick"><a href="https://market.yandex.ru/card/x/4640659615" target="_blank" rel="noopener">Teymi Laina 80, светлый дуб, подвесная</a> — 14 907 ₽, ★4.8 (361); зеркальный шкаф — на заказ/подобрать в цвет</span></li><li><span class="what">Смеситель для раковины</span><span class="pick"><a href="https://market.yandex.ru/card/x/103566349438" target="_blank" rel="noopener">Pragma Teiden, матовый чёрный</a> — 4 840 ₽, ★4.8 (297)</span></li><li><span class="what">Унитаз подвесной</span><span class="pick"><a href="https://market.yandex.ru/card/x/103566349350" target="_blank" rel="noopener">Pragma Nanta, безободковый</a> — 8 321 ₽, ★4.8 (379) · или комплект 7-в-1: <a href="https://market.yandex.ru/card/x/4987172451" target="_blank" rel="noopener">Teymi Lina + инсталляция + кнопка</a> — 17 105 ₽, ★4.8 (342)</span></li><li><span class="what">Инсталляция + кнопка</span><span class="pick"><a href="https://market.yandex.ru/card/x/103207557702" target="_blank" rel="noopener">инсталляция с кнопкой (матовое серебро)</a> — 11 783 ₽, ★4.9 (64) — или взять комплект Teymi выше</span></li><li><span class="what">Бойлер плоский ~50 л</span><span class="pick"><a href="https://market.yandex.ru/card/x/103198140390" target="_blank" rel="noopener">Electrolux Centurio IQ 3.0, 50 л</a> — 22 500 ₽, ★4.7 (184) — проверить габарит под шкаф 75×35×120</span></li><li><span class="what">Стиральная машина 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/4538578853" target="_blank" rel="noopener">Weissgauff WM 48128 Inverter Steam, 8 кг</a> — 30 753 ₽, ★4.8 (1,3K)</span></li><li><span class="what">Сушильная машина 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/4449251228" target="_blank" rel="noopener">Weissgauff WD 6128 B Heat Pump, 8 кг</a> — 41 225 ₽, ★4.9 (448) — та же марка, комплект для колонны подойдёт</span></li><li><span class="what">Комплект для установки в колонну</span><span class="pick"><a href="https://market.yandex.ru/card/x/103202153371" target="_blank" rel="noopener">Weissgauff WSK 11300</a> — 5 559 ₽, ★4.6 (100) — под машины Weissgauff</span></li><li><span class="what">Полотенцесушитель электрический ~50×95, чёрный</span><span class="pick"><a href="https://market.yandex.ru/card/x/4934054029" target="_blank" rel="noopener">Energy Round Modus 800×500, чёрный, с полкой</a> — 8 988 ₽, ★4.8 (169)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102597064942" target="_blank" rel="noopener">лесенка 500×600, чёрный матовый</a> — 8 406 ₽, ★4.9 (373)</span></li><li><span class="what">Пенал 60×35×200</span><span class="pick"><a href="https://market.yandex.ru/card/x/103017171123" target="_blank" rel="noopener">Runo 50, напольный пенал, белый</a> — 13 324 ₽, ★4.7 (111)</span></li><li><span class="what">Шкаф над унитазом под бойлер 75×35×120 </span><span class="pick"><a href="https://market.yandex.ru/card/x/103173371168" target="_blank" rel="noopener">навесной шкаф Runo Парма 60, белый</a> — 7 053 ₽, ★4.8 (76) — проверить, влезет ли бойлер; иначе каркас из ЛДСП у мастера</span></li><li><span class="what">Робот-мойщик со станцией (подключение к воде и сливу)</span><span class="pick"><a href="https://market.yandex.ru/card/x/5081862991" target="_blank" rel="noopener">Dreame L50 Ultra CE</a> — 48 484 ₽, ★4.9 (203) + <a href="https://market.yandex.ru/card/x/4771414834" target="_blank" rel="noopener">модуль воды и слива Dreame RAW7</a> — подключение к водопроводу/канализации; проверить совместимость с L50 в карточке</span></li><li><span class="what">Тёплый пол электрический + терморегулятор</span><span class="pick"><a href="https://market.yandex.ru/card/x/102442397646" target="_blank" rel="noopener">Теплософт Профи 3 м², 450 Вт, с терморегулятором</a> — 2 486 ₽, ★4.8 (466)</span></li></ul></details>
+<details><summary>Свет <span class="count">2</span></summary><ul class="buy"><li><span class="what">Споты встраиваемые ~11 шт.</span><span class="pick"><a href="https://market.yandex.ru/card/x/102166956648" target="_blank" rel="noopener">Maytoni Atom DL024-2-01B, чёрный, GU10</a> — 672 ₽/шт, ★4.9 (67) + лампы GU10 3000–4000K</span></li><li><span class="what">Трековая система: шинопровод 2 м + 1,5 м, светильники 4+ шт.</span><span class="pick"><a href="https://market.yandex.ru/card/x/4681600666" target="_blank" rel="noopener">Camelion, комплект 4×GU10 + шинопровод, чёрный</a> — 1 823 ₽, ★4.8 (103); под натяжной потолок лучше встроенный магнитный трек — у потолочников</span></li></ul></details>
+<details><summary>Двери <span class="count">1</span></summary><ul class="buy"><li><span class="what">Скрытые двери 2 шт. (спальня, санузел), под покраску, с коробом</span><span class="pick">на Маркете нормальных с отзывами нет — заказывать у фабрики/дилера (Profil Doors Invisible, Софья, Волховец) вместе с монтажом</span></li></ul></details>
+<details><summary>Умный дом (Алиса, Zigbee) <span class="count">9</span></summary><ul class="buy"><li><span class="what">Хаб + колонка</span><span class="pick"><a href="https://market.yandex.ru/card/x/6216827683" target="_blank" rel="noopener">Яндекс Станция Миди с Zigbee</a> — 15 515 ₽, ★5.0 (76) — центр всего умного дома</span></li><li><span class="what">Умные выключатели (свет, споты по зонам) ~6 шт.</span><span class="pick"><a href="https://market.yandex.ru/card/x/103657695257" target="_blank" rel="noopener">Яндекс YNDX-00531, Zigbee</a> — 2 162 ₽, ★4.8 (198); есть 2-клавишные</span></li><li><span class="what">Датчики движения (прихожая, санузел</span><span class="pick">свет сам) ×2 — <a href="https://market.yandex.ru/card/x/6216639530" target="_blank" rel="noopener">Яндекс YNDX-00528, Zigbee</a> — 1 132 ₽, ★4.9 (15)</span></li><li><span class="what">Умные лампы GU10 в треки ×6</span><span class="pick"><a href="https://market.yandex.ru/card/x/103058325300" target="_blank" rel="noopener">GU10 Zigbee, работает с Алисой</a> — 1 127 ₽, ★4.7 (131)</span></li><li><span class="what">Шторы</span><span class="pick">электрокарнизы (уже в списке выше) — <a href="https://market.yandex.ru/card/x/102560905004" target="_blank" rel="noopener">RAYOS Wi-Fi, работает с Алисой</a> — проверено в карточке</span></li><li><span class="what">Датчики протечки ×5 (под стиралкой, душ, раковина, мойка, посудомойка)</span><span class="pick"><a href="https://market.yandex.ru/card/x/6171476194" target="_blank" rel="noopener">Яндекс YNDX-00527, Zigbee</a> — 1 214 ₽, ★5.0 (8)</span></li><li><span class="what">Защита от протечек с автокранами (перекрывает воду сама)</span><span class="pick"><a href="https://market.yandex.ru/card/x/103199072136" target="_blank" rel="noopener">Neptun Bugatti Smart, Wi-Fi</a> — 35 640 ₽, ★4.8 (222) — взять вариант 1/2&quot;</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103505476048" target="_blank" rel="noopener">Ujin Water Control, с Алисой</a> — 27 014 ₽, ★5.0 (30)</span></li><li><span class="what">Датчики температуры/влажности ×3 (спальня, зал, санузел)</span><span class="pick"><a href="https://market.yandex.ru/card/x/5867607801" target="_blank" rel="noopener">Яндекс YNDX-00529, Zigbee</a> — 1 406 ₽, ★4.8 (61)</span></li><li><span class="what">Терморегулятор тёплого пола с Wi-Fi</span><span class="pick"><a href="https://market.yandex.ru/card/x/102385719251" target="_blank" rel="noopener">умный терморегулятор Wi-Fi</a> — 3 396 ₽, ★4.8 (214)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103173352540" target="_blank" rel="noopener">EKF Connect, с Алисой</a> — 2 325 ₽, ★4.6 (87)</span></li></ul></details>
+<details><summary>Климат и воздух <span class="count">4</span></summary><ul class="buy"><li><span class="what">Бризер (свежий уличный воздух с фильтром и подогревом)</span><span class="pick">спальня — <a href="https://market.yandex.ru/card/x/103719464070" target="_blank" rel="noopener">Royal Clima BREZZA RCB 150 Lux + нагреватель</a> — 42 891 ₽, ★4.9 (70)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102956550830" target="_blank" rel="noopener">Ballu ONEAIR ASP-100WM, датчик CO₂</a> — 36 458 ₽, ★4.6 (302)</span></li><li><span class="what">Бризер</span><span class="pick">зал (по желанию, второй) — тот же Brezza / <a href="https://market.yandex.ru/card/x/103719464069" target="_blank" rel="noopener">Brezza XS RCB 75, компактный</a> — 18 206 ₽, ★4.9 (70)</span></li><li><span class="what">Анализатор воздуха (CO₂, PM2.5, температура, влажность)</span><span class="pick"><a href="https://market.yandex.ru/card/x/4811526006" target="_blank" rel="noopener">Qingping Air Monitor 2</a> — 9 611 ₽, ★4.8 (53) · проще: <a href="https://market.yandex.ru/card/x/4757818171" target="_blank" rel="noopener">Qingping CGP22C, Wi-Fi</a> — 4 738 ₽, ★4.8 (88)</span></li><li><span class="what">Кондиционеры</span><span class="pick">обычные инверторные хватает; «кондиционер с притоком» на рынке почти нет, приток делает бризер — —</span></li></ul></details>
+  </section>
+
+  <section class="block" id="stages">
+    <h2>Этапы</h2>
+    <p class="lead">Сначала всё, что потом трудно переделать, мебель — в конце.</p>
+    <ol class="stages"><li><h3>Черновые работы</h3><p>Перегородки, электрика, трубы, трассы кондиционеров, шумоизоляция.</p></li><li><h3>Отделка</h3><p>Гидроизоляция и плитка в санузле, стены, натяжные потолки, пол, двери.</p></li><li><h3>Кухня и санузел</h3><p>Кухня, техника, сантехника, свет. После этого можно жить.</p></li><li><h3>Мебель</h3><p>Шкафы, диван, шторы и всё остальное — постепенно.</p></li></ol>
+  </section>
+</main>
+
+<footer><div class="wrap">Обновлено 27.10.2026.</div></footer>
+
+<dialog id="zoom"><button type="button" id="zoom-close">Закрыть</button><img alt=""></dialog>
+
+<script>
+  const dlg = document.getElementById('zoom'), big = dlg.querySelector('img');
+  document.querySelectorAll('.hero img, .shots img, figure img').forEach(img => {
+    img.tabIndex = 0;
+    const open = () => { big.src = img.src; big.alt = img.alt; dlg.showModal(); };
+    img.addEventListener('click', open);
+    img.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
+  });
+  document.getElementById('zoom-close').onclick = () => dlg.close();
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+</script>
+<script type="module">
+  import { mount } from './model.js?v=1793067900';
+  const api = mount(document.getElementById('model'));
+  const toggle = (id, fn) => {
+    const b = document.getElementById(id);
+    b.onclick = () => { const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); fn(on); };
+  };
+  toggle('btn-furn', on => api.setFurniture(on));
+  toggle('btn-low', on => api.setLowWalls(on));
+</script>
+</body>
+</html>
