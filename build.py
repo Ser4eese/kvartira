@@ -158,7 +158,7 @@ def plan_svg(focus=None, full=True):
 
 def page():
     def chips(items):
-        return "".join(f'<li><span class="chip" style="--c:{SW[k][0]}"></span><b>{SW[k][1]}</b><small>{w}</small></li>'
+        return "".join(f'<li tabindex="0" data-hex="{SW[k][0].upper()}"><span class="chip" style="--c:{SW[k][0]}"></span><b>{SW[k][1]}</b><small>{w}</small></li>'
                        for k, w in items)
     ids = ["bed", "living", "kitchen", "hall", "bath"]
     rooms = "".join(
