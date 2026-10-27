@@ -77,8 +77,10 @@
   .chip { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
   .swatches b { font-weight: 500; line-height: 1.2; font-size: 15px; }
   .swatches small { color: var(--muted); font-size: 13.5px; line-height: 1.3; }
-  .swatches li::after { content: attr(data-hex); position: absolute; left: 0; bottom: calc(100% + 6px); padding: 3px 7px; background: var(--ink); color: var(--paper); font-size: 13px; letter-spacing: .02em; border-radius: 4px; opacity: 0; pointer-events: none; transition: opacity .12s; }
+  .swatches li::after { content: attr(data-hex); position: absolute; left: 0; bottom: calc(100% + 6px); padding: 3px 7px; background: var(--ink); color: var(--paper); font-size: 13px; letter-spacing: .02em; border-radius: 4px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s; }
   .swatches li:hover::after, .swatches li:focus-visible::after, .swatches li:focus::after { opacity: 1; }
+  .swatches li { cursor: copy; }
+  .swatches li[data-copied]::after { content: "Скопировано " attr(data-hex); opacity: 1; }
   .swatches li:focus { outline: none; }
   .swatches li:focus-visible .chip { outline: 2px solid var(--ink); outline-offset: 2px; }
 
@@ -223,6 +225,14 @@
   });
   document.getElementById('zoom-close').onclick = () => dlg.close();
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  document.querySelectorAll('.swatches li').forEach(li => {
+    const copy = () => navigator.clipboard.writeText(li.dataset.hex).then(() => {
+      li.dataset.copied = '';
+      clearTimeout(li.t); li.t = setTimeout(() => delete li.dataset.copied, 1500);
+    });
+    li.addEventListener('click', copy);
+    li.addEventListener('keydown', e => { if (e.key === 'Enter') copy(); });
+  });
 </script>
 <script type="module">
   import { mount } from './model.js?v=%%VER%%';
