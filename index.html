@@ -9,86 +9,106 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  /* Палитра — реальные отделки квартиры. Фон страницы = цвет стен. */
   :root {
-    --bg: #f7f6f3; --ink: #2b2d2a; --muted: #6d6f68; --olive: #5e6650; --olive-deep: #464d3b;
-    --sage: #a9b39a; --oak: #c9a57a; --line: #dcd8cf; --card: #ffffff;
+    --wall: #ece7e0; --paper: #f6f3ee; --ink: #2f3133; --muted: #5f5e58; --line: #d6cfc4;
+    --olive: #8e9078; --olive-ink: #4f5741; --oak: #c9a57a; --graphite: #4a4d50;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 Onest, system-ui, sans-serif; }
-  a { color: var(--olive); }
-  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 3px solid var(--oak); outline-offset: 2px; }
+  body { margin: 0; background: var(--wall); color: var(--ink); font: 17px/1.6 Onest, system-ui, sans-serif; }
+  a { color: var(--olive-ink); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, img:focus-visible { outline: 3px solid var(--graphite); outline-offset: 3px; }
   img { display: block; max-width: 100%; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
 
-  header.hero { background: var(--olive-deep); color: #f1efe8; padding: 56px 0 0; }
-  .hero h1 { font-size: clamp(44px, 9vw, 96px); line-height: .95; font-weight: 700; letter-spacing: -.03em; margin: 0; }
-  .hero p { max-width: 34em; color: #d6d9cc; margin: 18px 0 32px; font-size: 18px; }
-  .hero .top { width: 100%; border-radius: 8px 8px 0 0; cursor: zoom-in; }
+  /* Шапка: название + веер образцов */
+  .hero { padding: 64px 0 0; }
+  .hero h1 { font-size: clamp(56px, 12vw, 148px); line-height: .9; font-weight: 700; letter-spacing: -.045em; margin: 0; }
+  .hero p { max-width: 30em; color: var(--muted); margin: 20px 0 40px; font-size: 18px; }
+  .fan { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(9, 1fr); height: 210px; }
+  .fan li { background: var(--c); position: relative; }
+  .fan li span { position: absolute; left: 10px; bottom: 10px; right: 6px; font-size: 13px; font-weight: 500; line-height: 1.25;
+    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  .fan li:nth-child(n+3):nth-child(-n+6) span, .fan li:nth-child(7) span { color: var(--ink); text-shadow: none; }
+  .hero .top { width: 100%; cursor: zoom-in; margin-top: 8px; }
 
-  nav { position: sticky; top: 0; z-index: 5; background: rgba(247,246,243,.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
-  nav .wrap { display: flex; gap: 22px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; white-space: nowrap; }
-  nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; }
-  nav a:hover { color: var(--olive); }
+  nav { position: sticky; top: 0; z-index: 5; background: rgba(236,231,224,.95); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; gap: 24px; overflow-x: auto; white-space: nowrap; }
+  nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; padding: 13px 0; display: inline-block; }
+  nav a:hover { color: var(--olive-ink); text-decoration: underline; }
 
-  section.block { padding: 64px 0 8px; }
-  h2 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -.02em; line-height: 1.1; margin: 0 0 8px; }
-  .lead { color: var(--muted); max-width: 40em; margin: 0 0 28px; }
-  h3 { font-size: 21px; margin: 0 0 6px; }
-  h3 span { font-weight: 400; color: var(--muted); font-size: 16px; }
+  section.block { padding: 80px 0 8px; }
+  h2 { font-size: clamp(34px, 5.5vw, 56px); letter-spacing: -.03em; line-height: 1.05; margin: 0 0 10px; }
+  .lead { color: var(--muted); max-width: 38em; margin: 0 0 32px; }
+  h3 { font-size: 21px; margin: 0 0 6px; line-height: 1.25; }
 
-  .room { display: grid; grid-template-columns: 1fr 2fr; gap: 28px; padding: 28px 0; border-top: 1px solid var(--line); }
-  .room p { margin: 0; max-width: 32em; }
-  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-  .shots img, figure img { border-radius: 6px; cursor: zoom-in; }
+  /* Комната: рендеры, образцы отделки, текст */
+  .room { padding: 40px 0 48px; border-top: 1px solid var(--line); }
+  .room header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
+  .room h3 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -.02em; margin: 0; }
+  .area { color: var(--muted); }
+  .shots { display: grid; gap: 8px; grid-template-columns: 3fr 2fr; }
+  .shots.n1 { grid-template-columns: 1fr; }
+  .shots img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+  .room-text { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 40px; margin-top: 24px; }
+  .room-text p { margin: 0; max-width: 34em; }
+  .swatches { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; align-content: start; }
+  .swatches li { display: grid; grid-template-columns: 52px 1fr; column-gap: 14px; align-items: center; }
+  .chip { grid-row: span 2; width: 52px; height: 52px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+  .swatches b { font-weight: 500; line-height: 1.2; }
+  .swatches small { color: var(--muted); font-size: 14px; line-height: 1.3; }
 
-  #model { position: relative; height: min(72vh, 640px); background: #eeeae4; border-radius: 10px; overflow: hidden; touch-action: none; }
+  #model { position: relative; height: min(72vh, 640px); background: var(--paper); overflow: hidden; touch-action: none; }
   .model-tools { position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .model-tools button { font: 500 14px Onest, sans-serif; border: 1px solid var(--line); background: #fff; color: var(--ink);
-    padding: 8px 14px; border-radius: 999px; cursor: pointer; }
-  .model-tools button[aria-pressed="true"] { background: var(--olive); border-color: var(--olive); color: #fff; }
+  .model-tools button { font: 500 15px Onest, sans-serif; border: 1px solid var(--line); background: #fff; color: var(--ink);
+    min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer; transition: background-color .15s, color .15s; }
+  .model-tools button[aria-pressed="true"] { background: var(--graphite); border-color: var(--graphite); color: #fff; }
   .hint { color: var(--muted); font-size: 14px; margin-top: 10px; }
 
-  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 20px; }
   figure { margin: 0; }
+  figure img { cursor: zoom-in; background: #fff; }
   figcaption { font-weight: 500; margin-top: 8px; }
 
   details { border-top: 1px solid var(--line); }
   details:last-of-type { border-bottom: 1px solid var(--line); }
-  summary { cursor: pointer; padding: 16px 0; font-size: 21px; font-weight: 700; list-style: none; display: flex; align-items: baseline; gap: 10px; }
+  summary { cursor: pointer; padding: 16px 0; font-size: 22px; font-weight: 700; list-style: none; display: flex; align-items: baseline; gap: 10px; }
   summary::-webkit-details-marker { display: none; }
-  summary::before { content: "+"; width: 18px; color: var(--olive); }
+  summary::before { content: "+"; width: 20px; color: var(--olive-ink); }
   details[open] summary::before { content: "–"; }
   .count { font-size: 14px; font-weight: 500; color: var(--muted); }
-  ul.buy { list-style: none; margin: 0 0 18px; padding: 0 0 0 28px; }
-  ul.buy li { padding: 10px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
+  ul.buy { list-style: none; margin: 0 0 20px; padding: 0 0 0 30px; }
+  ul.buy li { padding: 12px 0; border-top: 1px dashed var(--line); display: grid; gap: 2px; }
   ul.buy .what { font-weight: 500; }
-  ul.buy .pick { color: var(--ink); }
   ul.buy .alt { color: var(--muted); font-size: 15px; }
   ul.buy li.have { opacity: .55; }
 
-  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px 36px; }
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px 40px; }
+  .how > div { border-top: 3px solid var(--olive); padding-top: 14px; }
   .how p { margin: 0; }
-  .how h3 { color: var(--olive-deep); }
 
-  ol.stages { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 0; }
-  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 56px 1fr; padding: 18px 0; border-top: 1px solid var(--line); }
-  ol.stages li::before { content: counter(s); font-size: 34px; font-weight: 700; color: var(--sage); line-height: 1; }
-  ol.stages li h3, ol.stages li p { grid-column: 2; margin: 0; }
+  ol.stages { list-style: none; counter-reset: s; padding: 0; margin: 0; }
+  ol.stages li { counter-increment: s; display: grid; grid-template-columns: 64px 1fr; padding: 20px 0; border-top: 1px solid var(--line); }
+  ol.stages li::before { content: counter(s); grid-row: span 2; font-size: 40px; font-weight: 700; color: var(--olive); line-height: 1; }
+  ol.stages li h3, ol.stages li p { margin: 0; }
 
-  footer { padding: 56px 0 40px; color: var(--muted); font-size: 14px; }
+  footer { padding: 64px 0 40px; color: var(--muted); font-size: 14px; }
 
   dialog { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
-  dialog::backdrop { background: rgba(30,32,28,.88); }
-  dialog img { max-width: 96vw; max-height: 90vh; border-radius: 6px; }
+  dialog::backdrop { background: rgba(38,39,42,.9); }
+  dialog img { max-width: 96vw; max-height: 90vh; }
   dialog button { position: fixed; top: 14px; right: 14px; font: 500 15px Onest, sans-serif; background: #fff; border: 0;
-    border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+    border-radius: 999px; min-height: 44px; padding: 0 18px; cursor: pointer; }
 
   @media (max-width: 760px) {
     body { font-size: 16px; }
-    .room { grid-template-columns: 1fr; gap: 14px; }
+    .fan { grid-template-columns: repeat(3, 1fr); height: auto; }
+    .fan li { height: 84px; }
+    .shots { grid-template-columns: 1fr; }
+    .room-text { grid-template-columns: 1fr; gap: 24px; }
   }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
 <script type="importmap">
 { "imports": {
@@ -101,9 +121,10 @@
 <header class="hero">
   <div class="wrap">
     <h1>Квартира</h1>
-    <p>46,6 м² в Новосибирске. Здесь — как она будет выглядеть, что в ней будет и в каком порядке делаем ремонт. Страница обновляется по ходу дела.</p>
-    <img class="top" src="img/top-3d.jpg" alt="Квартира сверху">
+    <p>46,6 м² в Новосибирске. Как она будет выглядеть, из чего сделана и в каком порядке идёт ремонт. Страница обновляется по ходу дела.</p>
   </div>
+  <ul class="fan" aria-label="Цвета и материалы квартиры"><li style="--c:#8E9078"><span>Олива</span></li><li style="--c:#7D8B6A"><span>Зелёный шалфей</span></li><li style="--c:#A9B39A"><span>Шалфей</span></li><li style="--c:#E4DED5"><span>Тёплый грейдж</span></li><li style="--c:#C9A57A"><span>Светлый дуб</span></li><li style="--c:#A6A199"><span>Серо-бежевая</span></li><li style="--c:#B9BAB8"><span>Плитка под бетон</span></li><li style="--c:#4A4D50"><span>Графит</span></li><li style="--c:#26272A"><span>Чёрный металл</span></li></ul>
+  <div class="wrap"><img class="top" src="img/top-3d.jpg" alt="Квартира сверху"></div>
 </header>
 
 <nav aria-label="Разделы"><div class="wrap">
@@ -114,8 +135,8 @@
 <main class="wrap">
   <section class="block" id="rooms">
     <h2>Комнаты</h2>
-    <p class="lead">Картинки из программы для дизайна. Цвета и мебель — как задумано, в жизни будет чуть иначе.</p>
-    <section class="room"><h3>Спальня <span>14,4 м²</span></h3><p>Кровать 160 стоит изголовьем к оливковой стене, по бокам тумбочки и бра. У окна — кресло и столик. Шкаф до потолка у двери. Телевизора нет: проектор стоит на тумбочке и показывает на белую стену напротив кровати. Шторы плотные, на электрокарнизе — открываются сами утром.</p><div class="shots"><img src=img/bed-1.jpg alt="Спальня" loading=lazy><img src=img/bed-2.jpg alt="Спальня" loading=lazy></div></section><section class="room"><h3>Гостиная <span>26,7 м² вместе с кухней</span></h3><p>Диван цвета шалфея, перед ним журнальный стол, который поднимается и становится обеденным. Телевизор на стене, под ним подвесная тумба. У окна рабочее место — кондиционер дует вдоль стены, а не в спину. Кухню от комнаты отделяют деревянные рейки до потолка.</p><div class="shots"><img src=img/living-1.jpg alt="Гостиная" loading=lazy><img src=img/living-2.jpg alt="Гостиная" loading=lazy></div></section><section class="room"><h3>Кухня <span></span></h3><p>Графитовые фасады, тёмная столешница. В высоком шкафу-пенале — духовка, посудомойка и микроволновка. Индукционная плита, вытяжка спрятана в шкаф. Холодильник у реек.</p><div class="shots"><img src=img/kitchen.jpg alt="Кухня" loading=lazy></div></section><section class="room"><h3>Прихожая <span></span></h3><p>Вдоль стены шкаф до потолка: одежда, отдельная секция для пылесоса и гладильной доски, и полка для роутера. Обувница и большое зеркало. Двери в спальню и санузел скрытые — без наличников, в цвет стены.</p><div class="shots"><img src=img/hall-1.jpg alt="Прихожая" loading=lazy><img src=img/hall-2.jpg alt="Прихожая" loading=lazy></div></section><section class="room"><h3>Санузел <span>6,3 м²</span></h3><p>Душ без поддона — слив прямо в полу, стеклянная перегородка. Подвесной унитаз, тумба с раковиной. Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией.</p><div class="shots"><img src=img/bath-1.jpg alt="Санузел" loading=lazy><img src=img/bath-2.jpg alt="Санузел" loading=lazy></div></section>
+    <p class="lead">Картинки из программы для дизайна, рядом — образцы отделки каждой комнаты. В жизни цвета будут чуть другими.</p>
+    <section class="room"><header><h3>Спальня</h3><span class="area">14,4 м²</span></header><div class="shots n2"><img src=img/bed-1.jpg alt="Спальня" loading=lazy><img src=img/bed-2.jpg alt="Спальня" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#8E9078"></span><b>Олива</b><small>стена за кроватью</small></li><li><span class="chip" style="--c:#E4DED5"></span><b>Тёплый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>стена под проектор</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, тумбочки</small></li><li><span class="chip" style="--c:#A9B39A"></span><b>Шалфей</b><small>кресло, шторы</small></li></ul><p>Кровать 160 стоит изголовьем к оливковой стене, по бокам тумбочки и бра. У окна — кресло и столик. Шкаф до потолка у двери. Телевизора нет: проектор стоит на тумбочке и показывает на белую стену напротив кровати. Шторы плотные, на электрокарнизе — открываются сами утром.</p></div></section><section class="room"><header><h3>Гостиная</h3><span class="area">26,7 м² вместе с кухней</span></header><div class="shots n2"><img src=img/living-1.jpg alt="Гостиная" loading=lazy><img src=img/living-2.jpg alt="Гостиная" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены</small></li><li><span class="chip" style="--c:#A6A199"></span><b>Серо-бежевая</b><small>стена с телевизором</small></li><li><span class="chip" style="--c:#7D8B6A"></span><b>Зелёный шалфей</b><small>диван</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки, тумба</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>светильники, ножки</small></li></ul><p>Диван цвета шалфея, перед ним журнальный стол, который поднимается и становится обеденным. Телевизор на стене, под ним подвесная тумба. У окна рабочее место — кондиционер дует вдоль стены, а не в спину. Кухню от комнаты отделяют деревянные рейки до потолка.</p></div></section><section class="room"><header><h3>Кухня</h3><span class="area"></span></header><div class="shots n1"><img src=img/kitchen.jpg alt="Кухня" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#4A4D50"></span><b>Графит</b><small>фасады, матовые</small></li><li><span class="chip" style="--c:#8F8D88"></span><b>Тёмный камень</b><small>столешница</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>мойка, смеситель</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол, рейки</small></li></ul><p>Графитовые фасады до потолка. В высоком шкафу-пенале — духовка, посудомойка и микроволновка. Индукционная плита, вытяжка спрятана в шкаф. Холодильник у реек.</p></div></section><section class="room"><header><h3>Прихожая</h3><span class="area"></span></header><div class="shots n2"><img src=img/hall-1.jpg alt="Прихожая" loading=lazy><img src=img/hall-2.jpg alt="Прихожая" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#ECE7E0"></span><b>Светлый грейдж</b><small>стены и двери в цвет стен</small></li><li><span class="chip" style="--c:#F4F2EE"></span><b>Белая матовая</b><small>шкаф во всю стену</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>пол</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>рама зеркала</small></li></ul><p>Вдоль стены шкаф до потолка: одежда, отдельная секция для пылесоса и гладильной доски, и полка для роутера. Обувница и большое зеркало. Двери в спальню и санузел скрытые — без наличников, в цвет стены.</p></div></section><section class="room"><header><h3>Санузел</h3><span class="area">6,3 м²</span></header><div class="shots n2"><img src=img/bath-1.jpg alt="Санузел" loading=lazy><img src=img/bath-2.jpg alt="Санузел" loading=lazy></div><div class="room-text"><ul class="swatches"><li><span class="chip" style="--c:#B9BAB8"></span><b>Плитка под бетон</b><small>стены и пол, плиты 90×180</small></li><li><span class="chip" style="--c:#C9A57A"></span><b>Светлый дуб</b><small>тумба, шкафы</small></li><li><span class="chip" style="--c:#26272A"></span><b>Чёрный металл</b><small>смесители, сушитель, профиль душа</small></li></ul><p>Душ без поддона — слив прямо в полу, стеклянная перегородка. Подвесной унитаз, тумба с раковиной. Стиральная и сушильная машины стоят друг на друге. Плоский бойлер спрятан в шкаф над унитазом. Пол с подогревом, полотенцесушитель, робот-мойщик полов со своей станцией.</p></div></section>
   </section>
 
   <section class="block" id="model-block">
@@ -138,13 +159,13 @@
 
   <section class="block" id="how">
     <h2>Как будет устроено</h2>
-    <p class="lead">Коротко о том, что в квартире будет работать само.</p>
+    <p class="lead">Что в квартире будет работать само.</p>
     <div class="how"><div><h3>Тёплый пол</h3><p>Электрический мат под плиткой в санузле. Регулятор с Wi-Fi у двери: можно включить с телефона или по расписанию — например, утром на час.</p></div><div><h3>Если протечёт</h3><p>На полу под стиралкой, раковиной, мойкой и у душа лежат датчики. Если намокнет — краны на входе воды закроются сами, на телефон придёт сообщение. Соседей не зальёт.</p></div><div><h3>Свет и шторы</h3><p>Всё слушается Алису. В прихожей и санузле свет включается сам, когда заходишь, а ночью горит тускло. Утром шторы открываются и свет плавно разгорается.</p></div><div><h3>Воздух</h3><p>В каждой комнате кондиционер. В спальне бризер — тихо подаёт уличный воздух через фильтр и подогревает его, окно открывать не нужно. Датчик показывает, когда душно.</p></div><div><h3>Тишина</h3><p>Стены, общие с соседями, закрыты шумоизоляцией, под полом звукопоглощающая подложка.</p></div></div>
   </section>
 
   <section class="block" id="shop">
     <h2>Что покупаем</h2>
-    <p class="lead">Выбрано на Яндекс Маркете — с хорошим рейтингом и большим числом отзывов. Цены на момент выбора, ссылки кликабельные. Бледным — то, что уже есть.</p>
+    <p class="lead">Выбрано на Яндекс Маркете — с хорошим рейтингом и большим числом отзывов. Цены на момент выбора, ссылки открываются. Бледным — то, что уже есть.</p>
     <details><summary>Спальня <span class="count">12</span></summary><ul class="buy"><li><span class="what">Кровать 160×200 (габарит ~170×215), с мягким изголовьем</span><span class="pick"><a href="https://market.yandex.ru/card/x/4476177026" target="_blank" rel="noopener">НАСЛАДА, бежевая, на высоких ножках, подъёмник</a> — 24 491 ₽, ★4.9 (683), 2,4K купили, габарит 170×215 — точно в план</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103590473257" target="_blank" rel="noopener">Босс, велюр латте</a> — 27 954 ₽, ★4.7 (761), 172×218</span></li><li><span class="what">Матрас 160×200</span><span class="pick"><a href="https://market.yandex.ru/card/x/103021971699" target="_blank" rel="noopener">Askona Comfort Optima</a> — 11 902 ₽, ★4.8 (10,9K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5783472714" target="_blank" rel="noopener">Devison Spring Orto</a> — 12 047 ₽, ★4.8 (18,1K)</span></li><li><span class="what">Тумбочки 2 шт., ~45×40×47, дуб</span><span class="pick"><a href="https://market.yandex.ru/card/x/103455698337" target="_blank" rel="noopener">массив берёзы, реечный фасад, 40×30×50</a> — 11 201 ₽/шт, ★5.0 (44), 756 купили — рейки как у перегородки</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103190601016" target="_blank" rel="noopener">Hoff SCANDICA Хортен 41×45×40</a> — 3 976 ₽, ★4.9 (55), 304 купили</span></li><li><span class="what">Шкаф 220×60×268, до потолка </span><span class="pick">готовый: <a href="https://market.yandex.ru/card/x/4378911135" target="_blank" rel="noopener">Уютная логика 160×260×50</a> — ★4.7–4.8 (800+ оценок серия) + <a href="https://market.yandex.ru/card/x/4334342781" target="_blank" rel="noopener">Уютная логика 60×260×50 с ящиком</a> — = 220 см · или одним: <a href="https://market.yandex.ru/card/x/4336842886" target="_blank" rel="noopener">225×260×50</a> — если в нишу влезает 225</span></li><li><span class="what">Бра у кровати 2 шт.</span><span class="pick"><a href="https://market.yandex.ru/card/x/4386624162" target="_blank" rel="noopener">Maple Lamp WL-26, чёрный металл + дерево, с выключателем</a> — 2 142 ₽/шт, ★4.8 (55), 328 купили</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102567520853" target="_blank" rel="noopener">Marseille LED, USB</a> — 1 498 ₽, ★4.7 (2,7K)</span></li><li><span class="what">Кресло у окна, ~68×84×76, букле/дуб</span><span class="pick"><a href="https://market.yandex.ru/card/x/103761686210" target="_blank" rel="noopener">Teddy, букле шалфей, деревянный каркас</a> — 5 504 ₽, ★4.8 (63) — компактное 56×55</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5097384054" target="_blank" rel="noopener">PLAYWOODS Hush Relax, букле</a> — 21 250 ₽, ★4.7 (13), крупнее</span></li><li><span class="what">Столик кофейный круглый Ø45, h 42</span><span class="pick"><a href="https://market.yandex.ru/card/x/103571751110" target="_blank" rel="noopener">EDWOOD S02, массив, светлый дуб, 40×40×50</a> — 3 818 ₽, ★4.8 (291), 644 купили</span></li><li><span class="what">Ковёр круглый/овальный ~140</span><span class="pick"><a href="https://market.yandex.ru/card/x/4741981665" target="_blank" rel="noopener">Bilbao BL26 Ø160, кремовый, рельефный</a> — 5 893 ₽, ★4.9 (1K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103141347749" target="_blank" rel="noopener">джутовый Ø150</a> — 10 166 ₽, ★4.9 (412)</span></li><li><span class="what">Шторы блэкаут, ширина ~260, h 265</span><span class="pick"><a href="https://market.yandex.ru/card/x/5843069046" target="_blank" rel="noopener">Guten Morgen «Рогожка» бежевый шале, 2×200×270</a> — 3 813 ₽, ★4.8 (линейка 800+ оценок); подшить до 265</span></li><li><span class="what">Электрокарниз 2,6 м</span><span class="pick"><a href="https://market.yandex.ru/card/x/102560905004" target="_blank" rel="noopener">RAYOS, Wi-Fi, регулируемая длина</a> — ~8 000 ₽, ★4.8 (108) — проверить работу с Алисой</span></li><li><span class="what">Проектор настольный (на тумбочку, картинка на белую стену)</span><span class="pick"><a href="https://market.yandex.ru/card/x/227383667008761856" target="_blank" rel="noopener">JIN TU X4, Real Full HD, 300 ANSI, Android</a> — 11 153 ₽, ★4.8 (1,4K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102941191974" target="_blank" rel="noopener">SHAKACHU C50, Full HD, автофокус</a> — 23 634 ₽, ★4.9 (119). Нужна автокоррекция трапеции — стоит сбоку</span></li><li><span class="what">Кондиционер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5146442615" target="_blank" rel="noopener">iFFALCON IF-CLTB09INV, инвертор, Wi-Fi</a> — 18 429 ₽, ★4.9 (943)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103752085019" target="_blank" rel="noopener">TCL TAC-CT09INV/R</a> — 27 998 ₽, ★4.8 (1,4K); мульти-сплит — уточнить у монтажника</span></li></ul></details>
 <details><summary>Зал <span class="count">18</span></summary><ul class="buy"><li><span class="what">Диван 225×98, шалфей/олива</span><span class="pick"><a href="https://market.yandex.ru/card/x/101486331733" target="_blank" rel="noopener">FORREST Сканди 220×97×92, тик-так, деревянные ножки</a> — 43 099 ₽, ★4.9 (42), магазин ★4.7; есть цвета зелёный/бежевый</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/6236603272" target="_blank" rel="noopener">Финка, минимализм, зелёный</a> — 27 376 ₽, ★4.7 (648)</span></li><li><span class="what">Журнальный стол-трансформер (подъёмная столешница), ~100×55</span><span class="pick"><a href="https://market.yandex.ru/card/x/4346769755" target="_blank" rel="noopener">AMI Лофт, трансформер 60×60 → 120×80, подъём</a> — 9 164 ₽, ★4.7 (1K), 3,2K купили; выбрать цвет под дуб</span></li><li><span class="what">Стулья для гостей 2 шт., складные</span><span class="pick"><a href="https://market.yandex.ru/card/x/103756044128" target="_blank" rel="noopener">ФанераФан, складной, дерево без покраски</a> — 1 946 ₽/шт, ★4.8 (93), 763 купили</span></li><li class="have"><span class="what"><s>Рабочий стол 160×75×75</s></span><span class="pick">есть свой</span></li><li class="have"><span class="what"><s>Офисное кресло</s></span><span class="pick">пока не нужно</span></li><li><span class="what">Навесной шкаф над столом 85×35×75 (рядом с кондиционером) </span><span class="pick"><a href="https://market.yandex.ru/card/x/103818843627" target="_blank" rel="noopener">навесной горизонтальный 80 см, Frenesie Лофт ВГ800</a> — 4 506 ₽, ★5.0 (43) — выбрать белый</span></li><li><span class="what">Телевизор 55&quot;</span><span class="pick"><a href="https://market.yandex.ru/card/x/103828516240" target="_blank" rel="noopener">TCL 55&quot; Q6CS QD-Mini LED, Google TV</a> — 48 081 ₽, ★4.8 (3,6K)</span></li><li><span class="what">ТВ-тумба подвесная 160×40×45, дуб/ротанг</span><span class="pick"><a href="https://market.yandex.ru/card/x/103189786086" target="_blank" rel="noopener">POINT 30, дуб вотан, 160×40×30</a> — 8 837 ₽, ★4.8 (96), 300 купили</span></li><li><span class="what">Навесной шкаф над ТВ 160×35×55 </span><span class="pick">2 × <a href="https://market.yandex.ru/card/x/103818843627" target="_blank" rel="noopener">Frenesie ВГ800, 80 см</a> — ≈9 000 ₽ за пару</span></li><li><span class="what">Шкаф 120×40×до потолка у окна, правая стена</span><span class="pick">готовый: <a href="https://market.yandex.ru/card/x/103802681070" target="_blank" rel="noopener">Уютная логика 120×260×50</a> — 18 543 ₽, ★4.7 (805) — глубина 50 вместо 40</span></li><li><span class="what">Рейки-перегородка дуб, 120×270</span><span class="pick">не продаётся готовой нигде нормально. Делаем сами: 15 шт. <a href="https://leroymerlin.ru/product/brusok-stroganyy-40h40x3000-mm-hvoya-sort-optima-81947394/" target="_blank" rel="noopener">брусок строганый 40×40×3000, Леруа</a> (лучше сорт «Экстра», без сучков, ~400–740 ₽/шт) + масло с тоном «дуб» + крепёж к полу и закладной в потолке; шаг 40 мм. МДФ-рейки 16×40 для отдельностоящей перегородки слишком хлипкие</span></li><li><span class="what">Ковёр 200×160</span><span class="pick"><a href="https://market.yandex.ru/card/x/103189319465" target="_blank" rel="noopener">безворсовый 160×230, Фабрика Белка, серо-бежевый</a> — 4 967 ₽, ★4.8 (847), 2,1K купили</span></li><li><span class="what">Торшер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5554185388" target="_blank" rel="noopener">Rivoli Anda, абажур из джута, дерево, полки, 148 см</a> — 4 684 ₽, ★4.8 (2,4K), 11K купили</span></li><li><span class="what">Шторы, ширина ~230, h 265</span><span class="pick"><a href="https://market.yandex.ru/card/x/5843069046" target="_blank" rel="noopener">те же Guten Morgen «Рогожка»</a> — 3 813 ₽</span></li><li><span class="what">Электрокарниз 2,3 м</span><span class="pick"><a href="https://market.yandex.ru/card/x/102560905003" target="_blank" rel="noopener">RAYOS, Wi-Fi, регулируемая длина</a> — ~7 200 ₽, ★4.8 (108)</span></li><li><span class="what">Кондиционер</span><span class="pick"><a href="https://market.yandex.ru/card/x/5146442615" target="_blank" rel="noopener">iFFALCON IF-CLTB09INV, инвертор, Wi-Fi</a> — 18 429 ₽, ★4.9 (943)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/103752085019" target="_blank" rel="noopener">TCL TAC-CT09INV/R</a> — 27 998 ₽, ★4.8 (1,4K); мульти-сплит — уточнить у монтажника</span></li><li><span class="what">Картина/постер ~80×100</span><span class="pick">ссылка:</span></li><li><span class="what">Растение в кашпо</span><span class="pick">ссылка:</span></li></ul></details>
 <details><summary>Кухня <span class="count">10</span></summary><ul class="buy"><li><span class="what">Кухонный гарнитур графит матовый : нижние 45 + 100 (под варку) + угол 60 + 60 (мойка); пенал 60 под технику; навесные 145 + 60 + 60, над холодильником 60×70</span><span class="pick">ссылка:</span></li><li><span class="what">Холодильник 60×62×195, двухкамерный</span><span class="pick"><a href="https://market.yandex.ru/card/x/5227998029" target="_blank" rel="noopener">Comfee RCB449WH1R, Full No Frost, 353 л</a> — 29 489 ₽, ★4.8 (6,3K) — сверить высоту с нишей под шкаф 60×70</span></li><li><span class="what">Духовой шкаф встраиваемый 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/103800129117" target="_blank" rel="noopener">Weissgauff EOM 306 Black Edition, конвекция, гриль</a> — 21 590 ₽, ★4.8 (2,4K)</span></li><li><span class="what">Посудомойка компактная встраиваемая 60×45 (h)</span><span class="pick">компактных встраиваемых 60×45 с хорошими оценками нет → вариант: узкая 45 см под столешницу на место ящика 45: <a href="https://market.yandex.ru/card/x/5930185310" target="_blank" rel="noopener">Comfee CDWI450, 9 компл.</a> — 18 990 ₽, ★4.8 (3,2K)</span></li><li class="have"><span class="what"><s>Микроволновка встраиваемая 60×38–45</s></span><span class="pick">есть своя — если она отдельностоящая, в пенале нужна ниша-полка 60 с зазорами для вентиляции</span></li><li><span class="what">Варочная панель индукционная 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/102770140399" target="_blank" rel="noopener">Comfee CIH601, индукция, инвертор</a> — 8 488 ₽, ★4.8 (3K)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/102205603857" target="_blank" rel="noopener">Weissgauff HI 640 BA</a> — 12 428 ₽, ★4.8 (577)</span></li><li><span class="what">Вытяжка встраиваемая в шкаф 60</span><span class="pick"><a href="https://market.yandex.ru/card/x/102168371176" target="_blank" rel="noopener">Hansa OTP6651BGH, телескопическая</a> — 7 676 ₽, ★4.8 (428)</span><span class="alt">Запасной вариант: <a href="https://market.yandex.ru/card/x/5145316892" target="_blank" rel="noopener">DeLonghi KT-ARIA 606 NB</a> — 5 063 ₽, ★4.9 (262)</span></li><li><span class="what">Мойка 55 (чёрная)</span><span class="pick"><a href="https://market.yandex.ru/card/x/4675544426" target="_blank" rel="noopener">Domaci Болонья 50×50, искусственный камень, чёрная</a> — 4 163 ₽, ★4.9 (208)</span></li><li><span class="what">Смеситель</span><span class="pick"><a href="https://market.yandex.ru/card/x/103566349578" target="_blank" rel="noopener">Pragma Melpul, матовый чёрный, выдвижной излив</a> — 6 918 ₽, ★4.8 (222)</span></li><li><span class="what">LED-подсветка под шкафы ~1,8 м + профиль</span><span class="pick"><a href="https://market.yandex.ru/card/x/4414293241" target="_blank" rel="noopener">лента LTC COB 24 В, 4000K, 5 м</a> — 1 783 ₽, ★4.9 (143) + профиль и блок питания 24 В</span></li></ul></details>
@@ -169,7 +190,7 @@
 
 <script>
   const dlg = document.getElementById('zoom'), big = dlg.querySelector('img');
-  document.querySelectorAll('.hero img, .shots img, figure img').forEach(img => {
+  document.querySelectorAll('.hero .top, .shots img, figure img').forEach(img => {
     img.tabIndex = 0;
     const open = () => { big.src = img.src; big.alt = img.alt; dlg.showModal(); };
     img.addEventListener('click', open);
